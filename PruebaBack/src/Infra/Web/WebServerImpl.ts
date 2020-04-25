@@ -1,5 +1,6 @@
 import WebServer from "./WebServer";
 import * as express from 'express';
+import * as cors from 'cors';
 import UserController from "../../UseCases/UserController";
 import UsersAPI from "./UsersAPI";
 
@@ -14,6 +15,7 @@ export default class WebServerImpl implements WebServer{
         this.usersController = usersController;
         this.usersAPI = new UsersAPI(this.usersController);
         this.app.use(express.json());
+        this.app.use(cors())
         this.app.use('/users', this.usersAPI.router);
     }
 

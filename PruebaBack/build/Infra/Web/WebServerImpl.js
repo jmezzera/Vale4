@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+var cors = require("cors");
 var UsersAPI_1 = require("./UsersAPI");
 var WebServerImpl = /** @class */ (function () {
     function WebServerImpl(usersController) {
@@ -8,6 +9,7 @@ var WebServerImpl = /** @class */ (function () {
         this.usersController = usersController;
         this.usersAPI = new UsersAPI_1.default(this.usersController);
         this.app.use(express.json());
+        this.app.use(cors());
         this.app.use('/users', this.usersAPI.router);
     }
     WebServerImpl.prototype.listen = function (port) {
