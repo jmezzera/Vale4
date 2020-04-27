@@ -1,17 +1,10 @@
 import User from "./User";
 
-export class LoggedUser extends User {
+export default class LoggedUser extends User {
 	private _token: string;
 
-	constructor(
-		name: string,
-		surname: string,
-		nickname: string,
-		email: string,
-		password: string,
-		token: string
-	) {
-		super(name, surname, nickname, email, password);
+	constructor(nickname: string, email: string, token: string) {
+		super(nickname, email);
 		this._token = token;
 	}
 

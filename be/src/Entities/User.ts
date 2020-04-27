@@ -6,17 +6,17 @@ export default class User {
 	private _password: string;
 
 	constructor(
-		name: string,
-		surname: string,
 		nickname: string,
 		email: string,
-		password: string
+		password?: string,
+		name?: string,
+		surname?: string
 	) {
+		this._nickname = nickname;
+		this._email = email;
+		this._password = password;
 		this._name = name;
 		this._surname = surname;
-		this._email = email;
-		this._nickname = nickname;
-		this._password = password;
 	}
 
 	/**

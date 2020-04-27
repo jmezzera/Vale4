@@ -1,6 +1,7 @@
 import User from "../Entities/User";
+import LoggedUser from "../Entities/LoggedUser";
 
-export default class UserController {
-    login(user: User): Promise<LoggedUser>,
-    registry(user: User): Promies<LoggedUser>
+export default interface UserController {
+	login(user: User): Promise<LoggedUser>;
+	registry(user: User): Promise<LoggedUser>;
 }
