@@ -1,0 +1,1 @@
+{"version":3,"file":"SocketHandler.js","sourceRoot":"","sources":["../../../src/Infra/Web/SocketHandler.ts"],"names":[],"mappings":";;AACA,oCAAsC;AAEtC;IACI,uBAAY,MAAmB;QAC3B,IAAM,EAAE,GAAG,QAAQ,CAAC,MAAM,CAAC,CAAC;QAE5B,EAAE,CAAC,EAAE,CAAC,SAAS,EAAE,UAAC,MAAuB,IAAM,CAAC,CAAC,CAAC;IACtD,CAAC;IACL,oBAAC;AAAD,CAAC,AAND,IAMC"}
