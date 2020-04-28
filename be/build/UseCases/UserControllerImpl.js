@@ -5,7 +5,6 @@ var UserControllerImpl = /** @class */ (function () {
         this._usersDB = usersDB;
     }
     UserControllerImpl.prototype.login = function (user) {
-        console.log(user);
         return this._usersDB.findUserToLogin(user.nickname, user.email, user.password);
     };
     UserControllerImpl.prototype.registry = function (user) {

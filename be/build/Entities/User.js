@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var User = /** @class */ (function () {
-    function User(nickname, email, password, name, surname) {
+    function User(nickname, email, password, confirmPassword, name, surname) {
         this._nickname = nickname;
         this._email = email;
         this._password = password;
+        this._confirmPassword = confirmPassword;
         this._name = name;
         this._surname = surname;
     }
@@ -94,6 +95,24 @@ var User = /** @class */ (function () {
          */
         set: function (value) {
             this._password = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(User.prototype, "confirmPassword", {
+        /**
+         * Getter confirmPassword
+         * @return {string}
+         */
+        get: function () {
+            return this._confirmPassword;
+        },
+        /**
+         * Setter confirmPassword
+         * @param {string} value
+         */
+        set: function (value) {
+            this._confirmPassword = value;
         },
         enumerable: true,
         configurable: true

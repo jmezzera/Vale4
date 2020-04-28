@@ -9,7 +9,6 @@ export default class UserControllerImpl implements UserController {
 		this._usersDB = usersDB;
 	}
 	login(user: User): Promise<LoggedUser> {
-		console.log(user);
 		return this._usersDB.findUserToLogin(
 			user.nickname,
 			user.email,
