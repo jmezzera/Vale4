@@ -50,7 +50,7 @@ export default class UsersAPI {
 			res.status(400).json(errors);
 			return;
 		}
-		res.status(200).send("ENTRO");
+		res.status(200).send(user);
 	};
 
 	public get router(): express.Router {

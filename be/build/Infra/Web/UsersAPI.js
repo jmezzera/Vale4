@@ -22,7 +22,7 @@ var UsersAPI = /** @class */ (function () {
                 res.status(400).json(errors);
                 return;
             }
-            res.status(200).send("ENTRO");
+            res.status(200).send(user);
         };
         this.usersController = usersController;
         this.registerValidator = new RegisterValidator_1.default();
