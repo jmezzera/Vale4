@@ -16,7 +16,15 @@ export default class RegisterValidator {
 		this.validator = new Validator();
 	}
 
-	private isEmpty = (value): any => {
+	private existErrors = (errors): boolean => {
+		Object.keys(errors).forEach(function (property) {
+			if (errors[property] !== "") {
+				return true;
+			}
+		});
+		return false;
+	};
+	private isEmpty = (value): boolean => {
 		const validation =
 			value === undefined ||
 			value === null ||
@@ -34,14 +42,14 @@ export default class RegisterValidator {
 			password: "",
 			confirmPassword: "",
 		};
+
 		user.name = !this.isEmpty(user.name) ? user.name : "";
 		user.email = !this.isEmpty(user.email) ? user.email : "";
 		user.password = !this.isEmpty(user.password) ? user.password : "";
 		user.confirmPassword = !this.isEmpty(user.confirmPassword)
 			? user.confirmPassword
 			: "";
-
-		if (this.validator.isLength(user.name, 2, 20)) {
+		if (!this.validator.isLength(user.name, 2, 20)) {
 			errors.name = "Name must be between 2 and 20 characters";
 		}
 
@@ -65,14 +73,13 @@ export default class RegisterValidator {
 		if (this.isEmpty(user.confirmPassword)) {
 			errors.confirmPassword = "Confirm passowrd field is required";
 		}
-
 		if (!this.validator.equals(user.password, user.confirmPassword)) {
 			errors.confirmPassword = "Passowrd must match";
 		}
 
 		return {
 			errors: errors,
-			isValid: this.isEmpty(errors),
+			isNotValid: this.existErrors(errors),
 		};
 	};
 }

@@ -1,13 +1,3 @@
-import { Validator } from "validator.ts/Validator";
-import {
-	Contains,
-	IsInt,
-	IsLength,
-	IsEmail,
-	IsFQDN,
-	IsDate,
-} from "validator.ts/decorator/Validation";
-
 export default class User {
 	private _name: string;
 	private _surname: string;
@@ -31,7 +21,6 @@ export default class User {
 		this._name = name;
 		this._surname = surname;
 	}
-
 	/**
 	 * Getter name
 	 * @return {string}

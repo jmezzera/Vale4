@@ -4,6 +4,14 @@ var Validator_1 = require("validator.ts/Validator");
 var RegisterValidator = /** @class */ (function () {
     function RegisterValidator() {
         var _this = this;
+        this.existErrors = function (errors) {
+            Object.keys(errors).forEach(function (property) {
+                if (errors[property] !== "") {
+                    return true;
+                }
+            });
+            return false;
+        };
         this.isEmpty = function (value) {
             var validation = value === undefined ||
                 value === null ||
@@ -26,7 +34,7 @@ var RegisterValidator = /** @class */ (function () {
             user.confirmPassword = !_this.isEmpty(user.confirmPassword)
                 ? user.confirmPassword
                 : "";
-            if (_this.validator.isLength(user.name, 2, 20)) {
+            if (!_this.validator.isLength(user.name, 2, 20)) {
                 errors.name = "Name must be between 2 and 20 characters";
             }
             /*if (this.validator.isEmail(user.email)) {
@@ -50,7 +58,7 @@ var RegisterValidator = /** @class */ (function () {
             }
             return {
                 errors: errors,
-                isValid: _this.isEmpty(errors),
+                isNotValid: _this.existErrors(errors),
             };
         };
         this.validator = new Validator_1.Validator();

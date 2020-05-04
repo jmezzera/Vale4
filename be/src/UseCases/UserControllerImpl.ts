@@ -9,13 +9,9 @@ export default class UserControllerImpl implements UserController {
 		this._usersDB = usersDB;
 	}
 	login(user: User): Promise<LoggedUser> {
-		return this._usersDB.findUserToLogin(
-			user.nickname,
-			user.email,
-			user.password
-		);
+		return this._usersDB.findUserToLogin(user);
 	}
 	registry(user: User): Promise<LoggedUser> {
-		throw new Error("Method not implemented.");
+		return this._usersDB.addUser(user);
 	}
 }

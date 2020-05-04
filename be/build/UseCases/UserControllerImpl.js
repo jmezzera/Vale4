@@ -5,10 +5,10 @@ var UserControllerImpl = /** @class */ (function () {
         this._usersDB = usersDB;
     }
     UserControllerImpl.prototype.login = function (user) {
-        return this._usersDB.findUserToLogin(user.nickname, user.email, user.password);
+        return this._usersDB.findUserToLogin(user);
     };
     UserControllerImpl.prototype.registry = function (user) {
-        throw new Error("Method not implemented.");
+        return this._usersDB.addUser(user);
     };
     return UserControllerImpl;
 }());

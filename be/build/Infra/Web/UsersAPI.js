@@ -7,22 +7,40 @@ var UsersAPI = /** @class */ (function () {
     function UsersAPI(usersController) {
         var _this = this;
         this.login = function (req, res) {
-            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password, req.body.name, req.body.surname);
-            _this.usersController.login(user).then(function (loggedUser) {
-                res.status(200).send(loggedUser);
-            });
-        };
-        this.registry = function (req, res) {
-            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password, req.body.name, req.body.surname);
+            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password, req.body.confirmPassword, req.body.name, req.body.surname);
             var resValid = _this.registerValidator.validateRegisterInput(user);
             var errors = resValid["errors"];
-            var isValid = resValid["isValid"];
+            var isNotValid = resValid["isNotValid"];
             // Check Validation
-            if (!isValid) {
+            if (isNotValid) {
                 res.status(400).json(errors);
                 return;
             }
-            res.status(200).send(user);
+            _this.usersController
+                .login(user)
+                .then(function (loggedUser) {
+                res.status(200).send(loggedUser);
+                return;
+            })
+                .catch(function (err) { return res.status(400).send(err); });
+        };
+        this.registry = function (req, res) {
+            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password, req.body.confirmPassword, req.body.name, req.body.surname);
+            var resValid = _this.registerValidator.validateRegisterInput(user);
+            var errors = resValid["errors"];
+            var isNotValid = resValid["isNotValid"];
+            // Check Validation
+            if (isNotValid) {
+                res.status(400).json(errors);
+                return;
+            }
+            _this.usersController
+                .registry(user)
+                .then(function (loggedUser) {
+                res.status(200).send(loggedUser);
+                return;
+            })
+                .catch(function (err) { return res.status(400).send(err); });
         };
         this.usersController = usersController;
         this.registerValidator = new RegisterValidator_1.default();

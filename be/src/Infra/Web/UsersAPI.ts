@@ -25,13 +25,26 @@ export default class UsersAPI {
 			req.body.nickname,
 			req.body.email,
 			req.body.password,
+			req.body.confirmPassword,
 			req.body.name,
 			req.body.surname
 		);
+		const resValid = this.registerValidator.validateRegisterInput(user);
+		const errors = resValid["errors"];
+		const isNotValid = resValid["isNotValid"];
 
-		this.usersController.login(user).then((loggedUser) => {
-			res.status(200).send(loggedUser);
-		});
+		// Check Validation
+		if (isNotValid) {
+			res.status(400).json(errors);
+			return;
+		}
+		this.usersController
+			.login(user)
+			.then((loggedUser) => {
+				res.status(200).send(loggedUser);
+				return;
+			})
+			.catch((err) => res.status(400).send(err));
 	};
 
 	private registry = (req: express.Request, res: express.Response): void => {
@@ -39,18 +52,26 @@ export default class UsersAPI {
 			req.body.nickname,
 			req.body.email,
 			req.body.password,
+			req.body.confirmPassword,
 			req.body.name,
 			req.body.surname
 		);
 		const resValid = this.registerValidator.validateRegisterInput(user);
 		const errors = resValid["errors"];
-		const isValid = resValid["isValid"];
+		const isNotValid = resValid["isNotValid"];
+
 		// Check Validation
-		if (!isValid) {
+		if (isNotValid) {
 			res.status(400).json(errors);
 			return;
 		}
-		res.status(200).send(user);
+		this.usersController
+			.registry(user)
+			.then((loggedUser) => {
+				res.status(200).send(loggedUser);
+				return;
+			})
+			.catch((err) => res.status(400).send(err));
 	};
 
 	public get router(): express.Router {
