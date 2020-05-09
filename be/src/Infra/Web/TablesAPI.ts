@@ -1,5 +1,7 @@
 import * as express from "express";
 import TablesController from "../../UsesCases/TablesController";
+import User from "../../Entities/User";
+const userDummy = new User("jk", "jk");
 export default class TablesAPI {
     private _router: express.Router;
     private tablesController: TablesController;
@@ -22,7 +24,7 @@ export default class TablesAPI {
     private createTable = (req: express.Request, res: express.Response): void => {
         const { name, playersQty, isProtected, password } = req.body;
         this.tablesController
-            .createTable(null, name, playersQty, isProtected, password)
+            .createTable(userDummy, name, playersQty, isProtected, password) //FIXME: Userdummy
             .then(table => res.status(200).send({ tableId: table.id }))
             .catch(err => res.status(500).send(err));
     };
@@ -31,7 +33,7 @@ export default class TablesAPI {
         const idTable = req.params.idTable;
         const password = req.body.password;
         this.tablesController
-            .joinTable(idTable, null, password)
+            .joinTable(idTable, userDummy, password) //FIXME: Userdummy
             .then(table => res.status(201).send({ tableId: table.id }));
     };
 
