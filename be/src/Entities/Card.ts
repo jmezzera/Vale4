@@ -29,12 +29,24 @@ export default class Card {
      */
     public compareTo(other: Card, tableCard: Card): number {
         if (this.isPieza(tableCard) || other.isPieza(tableCard)) {
-            if (this.isPieza(this) && other.isPieza(other)) {
+            if (this.isPieza(tableCard) && other.isPieza(other)) {
                 //Las dos son piezas
+                //En caso de que alguna de las dos sea el alcahuete, lo intercambio con la muestra
+                let _this: Card = this;
+                if (this.number === 12) {
+                    let tmp = tableCard;
+                    tableCard = this;
+                    _this = tmp;
+                }
+                if (other.number === 12) {
+                    let tmp = tableCard;
+                    tableCard = other;
+                    other = tmp;
+                }
                 //Me fijo cuál aparece primero en el array piezas
                 return (
                     -1 *
-                    Math.sign(Card.piezas.indexOf(this.number) - Card.piezas.indexOf(other.number))
+                    Math.sign(Card.piezas.indexOf(_this.number) - Card.piezas.indexOf(other.number))
                 );
             }
             if (this.isPieza(tableCard)) {

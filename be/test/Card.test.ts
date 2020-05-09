@@ -68,6 +68,9 @@ describe("Test comparación", () => {
         expect(
             new Card(Suit.Oro, 12).compareTo(new Card(Suit.Oro, 4), new Card(Suit.Oro, 2))
         ).to.equal(1);
+        expect(
+            new Card(Suit.Oro, 12).compareTo(new Card(Suit.Oro, 4), new Card(Suit.Oro, 5))
+        ).to.equal(-1);
     });
     it("Pieza con mata", () => {
         expect(
