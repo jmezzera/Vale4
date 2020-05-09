@@ -31,9 +31,7 @@ var RegisterValidator = /** @class */ (function () {
             user.name = !_this.isEmpty(user.name) ? user.name : "";
             user.email = !_this.isEmpty(user.email) ? user.email : "";
             user.password = !_this.isEmpty(user.password) ? user.password : "";
-            user.confirmPassword = !_this.isEmpty(user.confirmPassword)
-                ? user.confirmPassword
-                : "";
+            user.confirmPassword = !_this.isEmpty(user.confirmPassword) ? user.confirmPassword : "";
             if (!_this.validator.isLength(user.name, 2, 20)) {
                 errors.name = "Name must be between 2 and 20 characters";
             }
@@ -47,8 +45,7 @@ var RegisterValidator = /** @class */ (function () {
                 errors.password = "Passowrd field is required";
             }
             if (!_this.validator.isLength(user.password, 6, 30)) {
-                errors.password =
-                    "passowrd must be at least 6 characters and no more than 30.";
+                errors.password = "passowrd must be at least 6 characters and no more than 30.";
             }
             if (_this.isEmpty(user.confirmPassword)) {
                 errors.confirmPassword = "Confirm passowrd field is required";
