@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var socketIo = require("socket.io");
 var User_1 = require("../../Entities/User");
+//TODO: tipar eventos
 var SocketHandler = /** @class */ (function () {
     function SocketHandler(server, tablesController) {
         this.io = socketIo(server);
@@ -54,9 +55,10 @@ var SocketHandler = /** @class */ (function () {
         tableNamespace.on("connect", function (socket) {
             console.log("Conectado a " + id);
             socket.on("discover", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var user;
+                var parsedData, user;
                 return __generator(this, function (_a) {
-                    user = new User_1.default();
+                    parsedData = JSON.parse(data);
+                    user = new User_1.default(parsedData.username, parsedData.username);
                     if (!user) {
                         socket.disconnect();
                     }

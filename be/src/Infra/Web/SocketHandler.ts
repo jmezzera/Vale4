@@ -4,6 +4,8 @@ import TablesSessions from "./TablesSessions";
 import User from "../../Entities/User";
 import TablesController from "../../UsesCases/TablesController";
 
+//TODO: tipar eventos
+
 export default class SocketHandler implements TablesSessions {
     private io: socketIo.Server;
     private tablesController: TablesController;
@@ -22,8 +24,10 @@ export default class SocketHandler implements TablesSessions {
         this.tables.set(id, tableNamespace);
         tableNamespace.on("connect", socket => {
             console.log("Conectado a " + id);
-            socket.on("discover", async (data: { username: string; token: string }) => {
-                let user: User = new User(); // Habria que validarlo con el controlador de usuarios
+            socket.on("discover", async (data: string) => {
+                let parsedData: { username: string; token: string } = JSON.parse(data);
+
+                let user: User = new User(parsedData.username, parsedData.username); // Habria que validarlo con el controlador de usuarios
                 if (!user) {
                     socket.disconnect();
                 }
