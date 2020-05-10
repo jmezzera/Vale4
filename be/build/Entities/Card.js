@@ -25,14 +25,10 @@ var Card = /** @class */ (function () {
                 //En caso de que alguna de las dos sea el alcahuete, lo intercambio con la muestra
                 var _this = this;
                 if (this.number === 12) {
-                    var tmp = tableCard;
-                    tableCard = this;
-                    _this = tmp;
+                    _this = tableCard;
                 }
                 if (other.number === 12) {
-                    var tmp = tableCard;
-                    tableCard = other;
-                    other = tmp;
+                    other = tableCard;
                 }
                 //Me fijo cuál aparece primero en el array piezas
                 return (-1 *

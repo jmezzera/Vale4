@@ -34,14 +34,10 @@ export default class Card {
                 //En caso de que alguna de las dos sea el alcahuete, lo intercambio con la muestra
                 let _this: Card = this;
                 if (this.number === 12) {
-                    let tmp = tableCard;
-                    tableCard = this;
-                    _this = tmp;
+                    _this = tableCard;
                 }
                 if (other.number === 12) {
-                    let tmp = tableCard;
-                    tableCard = other;
-                    other = tmp;
+                    other = tableCard;
                 }
                 //Me fijo cuál aparece primero en el array piezas
                 return (
