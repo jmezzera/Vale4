@@ -30,7 +30,6 @@ export default class UsersAPI {
 			req.body.password
 		);
 		const resValid = this.loginValidator.validateLoginInput(user);
-		console.log(resValid);
 		const errors = resValid["errors"];
 		const isNotValid = resValid["isNotValid"];
 

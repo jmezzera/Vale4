@@ -10,7 +10,6 @@ var UsersAPI = /** @class */ (function () {
         this.login = function (req, res) {
             var user = new User_1.default(req.body.nickname, req.body.email, req.body.password);
             var resValid = _this.loginValidator.validateLoginInput(user);
-            console.log(resValid);
             var errors = resValid["errors"];
             var isNotValid = resValid["isNotValid"];
             // Check Validation

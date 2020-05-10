@@ -63,15 +63,16 @@ var UserDBImpl = /** @class */ (function () {
                             })];
                     case 1:
                         findedUser = _a.sent();
-                        console.log(user.email);
                         if (!findedUser) return [3 /*break*/, 3];
                         return [4 /*yield*/, bcrypt.compare(user.password, findedUser.password)];
                     case 2:
                         isMatch = _a.sent();
-                        console.log(isMatch);
                         if (isMatch) {
                             token = this.getToken(findedUser.name, findedUser.id);
                             return [2 /*return*/, new LoggedUser_1.default(findedUser.nickname, findedUser.email, token)];
+                        }
+                        else {
+                            return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];
                         }
                         return [3 /*break*/, 4];
                     case 3: return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];

@@ -25,19 +25,21 @@ export default class UserDBImpl implements UsersDB {
 			const findedUser = await UserModel.findOne({
 				$or: [{ nickname: user.nickname }, { email: user.email }],
 			});
-			console.log(user.email);
 			if (findedUser) {
 				let isMatch = await bcrypt.compare(
 					user.password,
 					findedUser.password
 				);
-				console.log(isMatch);
 				if (isMatch) {
 					let token = this.getToken(findedUser.name, findedUser.id);
 					return new LoggedUser(
 						findedUser.nickname,
 						findedUser.email,
 						token
+					);
+				} else {
+					return Promise.reject(
+						"La contraseña o el usuario no coinciden."
 					);
 				}
 			} else {
