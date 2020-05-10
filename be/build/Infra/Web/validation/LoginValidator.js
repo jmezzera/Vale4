@@ -12,11 +12,11 @@ var LoginValidator = /** @class */ (function () {
                 if (errors[property] !== "") {
                     isValid = true;
                 }
-                if (items == Object.keys(errors).length) {
+                if (items === Object.keys(errors).length) {
                     return isValid;
                 }
             });
-            if (items == Object.keys(errors).length) {
+            if (items === Object.keys(errors).length) {
                 return isValid;
             }
         };
@@ -33,11 +33,11 @@ var LoginValidator = /** @class */ (function () {
                 nickname: "",
                 password: "",
             };
-            var regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
             //Validaciones id usuario (email, nickname)
             if (_this.isEmpty(user.email) && _this.isEmpty(user.nickname)) {
                 errors.email = "El identificador de usuario es requerido";
             }
+            var regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
             if (!regexEmail.test(user.email) &&
                 !_this.validator.isLength(user.nickname, 3, 20)) {
                 errors.email = "El identificador de usuario ingresado no es válido";

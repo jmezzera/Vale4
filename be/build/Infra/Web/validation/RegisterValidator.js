@@ -12,11 +12,11 @@ var RegisterValidator = /** @class */ (function () {
                 if (errors[property] !== "") {
                     isValid = true;
                 }
-                if (items == Object.keys(errors).length) {
+                if (items === Object.keys(errors).length) {
                     return isValid;
                 }
             });
-            if (items == Object.keys(errors).length) {
+            if (items === Object.keys(errors).length) {
                 return isValid;
             }
         };
@@ -36,7 +36,6 @@ var RegisterValidator = /** @class */ (function () {
                 password: "",
                 confirmPassword: "",
             };
-            var regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
             //Validaciones nombre
             if (_this.isEmpty(user.name)) {
                 errors.name = "Nombre requerido";
@@ -62,6 +61,7 @@ var RegisterValidator = /** @class */ (function () {
             if (_this.isEmpty(user.email)) {
                 errors.email = "El email es requerido";
             }
+            var regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
             if (!regexEmail.test(user.email)) {
                 errors.email = "El email ingresado no es válido";
             }

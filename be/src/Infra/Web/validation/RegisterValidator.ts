@@ -16,11 +16,11 @@ export default class RegisterValidator {
 			if (errors[property] !== "") {
 				isValid = true;
 			}
-			if (items == Object.keys(errors).length) {
+			if (items === Object.keys(errors).length) {
 				return isValid;
 			}
 		});
-		if (items == Object.keys(errors).length) {
+		if (items === Object.keys(errors).length) {
 			return isValid;
 		}
 	};
@@ -42,9 +42,6 @@ export default class RegisterValidator {
 			password: "",
 			confirmPassword: "",
 		};
-		let regexEmail = new RegExp(
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		);
 
 		//Validaciones nombre
 		if (this.isEmpty(user.name)) {
@@ -78,6 +75,9 @@ export default class RegisterValidator {
 			errors.email = "El email es requerido";
 		}
 
+		let regexEmail = new RegExp(
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		);
 		if (!regexEmail.test(user.email)) {
 			errors.email = "El email ingresado no es válido";
 		}

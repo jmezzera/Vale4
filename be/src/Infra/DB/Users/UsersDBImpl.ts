@@ -1,7 +1,6 @@
 import UsersDB from "./UsersDB";
 import LoggedUser from "../../../Entities/LoggedUser";
 import User from "../../../Entities/User";
-import IUser from "../user.model";
 import UserModel from "../user.model";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
