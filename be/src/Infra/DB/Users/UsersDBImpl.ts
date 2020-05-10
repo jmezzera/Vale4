@@ -32,21 +32,16 @@ export default class UserDBImpl implements UsersDB {
 				);
 				if (isMatch) {
 					let token = this.getToken(findedUser.name, findedUser.id);
-					return Promise.resolve(
-						new LoggedUser(
-							findedUser.nickname,
-							findedUser.email,
-							token
-						)
-					);
-				} else {
-					return Promise.reject(
-						"La contraseña o el usuario no coinciden."
+					return new LoggedUser(
+						findedUser.nickname,
+						findedUser.email,
+						token
 					);
 				}
 			}
-		} catch (e) {
-			return e;
+			return Promise.reject("La contraseña o el usuario no coinciden.");
+		} catch (err) {
+			throw new Error(err.message);
 		}
 	}
 	async addUser(user: User): Promise<LoggedUser> {
@@ -65,11 +60,9 @@ export default class UserDBImpl implements UsersDB {
 			newUser.password = hashedPassword;
 			const savedUser = await UserModel.create(newUser);
 			let token = this.getToken(savedUser.name, savedUser.id);
-			return Promise.resolve(
-				new LoggedUser(savedUser.nickname, savedUser.email, token)
-			);
-		} catch (e) {
-			return e;
+			return new LoggedUser(savedUser.nickname, savedUser.email, token);
+		} catch (err) {
+			throw new Error(err.message);
 		}
 	}
 }

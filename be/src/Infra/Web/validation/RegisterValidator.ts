@@ -1,13 +1,5 @@
 import User from "../../../Entities/User";
 import { Validator } from "validator.ts/Validator";
-import {
-	Contains,
-	IsInt,
-	IsLength,
-	IsEmail,
-	IsFQDN,
-	IsDate,
-} from "validator.ts/decorator/Validation";
 
 export default class RegisterValidator {
 	private validator: Validator;
@@ -42,39 +34,44 @@ export default class RegisterValidator {
 			password: "",
 			confirmPassword: "",
 		};
-
+		let regexEmail = new RegExp(
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		);
 		user.name = !this.isEmpty(user.name) ? user.name : "";
 		user.email = !this.isEmpty(user.email) ? user.email : "";
 		user.password = !this.isEmpty(user.password) ? user.password : "";
 		user.confirmPassword = !this.isEmpty(user.confirmPassword)
 			? user.confirmPassword
 			: "";
-		if (!this.validator.isLength(user.name, 2, 20)) {
-			errors.name = "Name must be between 2 and 20 characters";
+		if (!this.validator.isLength(user.name, 3, 20)) {
+			errors.name = "El nombre debe tener entre 3 y 20 caracteres";
 		}
 
-		/*if (this.validator.isEmail(user.email)) {
-			errors.email = "Email field is required";
-		}*/
-
+		if (this.isEmpty(user.email)) {
+			errors.email = "El email es requerido";
+		}
+		if (regexEmail.test(user.email)) {
+			errors.email = "El email ingresado no es válido";
+		}
 		if (this.isEmpty(user.name)) {
-			errors.name = "Name field is required";
+			errors.name = "Nombre requerido";
 		}
 
 		if (this.isEmpty(user.password)) {
-			errors.password = "Passowrd field is required";
+			errors.password = "Contraseña requerida";
 		}
 
 		if (!this.validator.isLength(user.password, 6, 30)) {
 			errors.password =
-				"passowrd must be at least 6 characters and no more than 30.";
+				"La contraseña debe tener una longitud mínima de 6 caracteres y no mayor a 30.";
 		}
 
 		if (this.isEmpty(user.confirmPassword)) {
-			errors.confirmPassword = "Confirm passowrd field is required";
+			errors.confirmPassword = "Contraseña de confirmación requerida";
 		}
 		if (!this.validator.equals(user.password, user.confirmPassword)) {
-			errors.confirmPassword = "Passowrd must match";
+			errors.confirmPassword =
+				"Las contraseñas ingresadas deben coincidir";
 		}
 
 		return {
