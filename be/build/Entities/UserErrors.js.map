@@ -1,0 +1,1 @@
+{"version":3,"file":"UserErrors.js","sourceRoot":"","sources":["../../src/Entities/UserErrors.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA,+BAA0B;AAE1B;IAAwC,8BAAI;IAC3C,oBACC,QAAgB,EAChB,KAAa,EACb,QAAgB,EAChB,eAAuB,EACvB,IAAY,EACZ,OAAe;eAEf,kBAAM,QAAQ,EAAE,KAAK,EAAE,QAAQ,EAAE,eAAe,EAAE,IAAI,EAAE,OAAO,CAAC;IACjE,CAAC;IACF,iBAAC;AAAD,CAAC,AAXD,CAAwC,cAAI,GAW3C"}
