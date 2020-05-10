@@ -9,12 +9,20 @@ export default class RegisterValidator {
 	}
 
 	private existErrors = (errors): boolean => {
-		Object.keys(errors).forEach(function (property) {
+		let items = 0;
+		let isValid: boolean = false;
+		Object.keys(errors).forEach((property) => {
+			items++;
 			if (errors[property] !== "") {
-				return true;
+				isValid = true;
+			}
+			if (items == Object.keys(errors).length) {
+				return isValid;
 			}
 		});
-		return false;
+		if (items == Object.keys(errors).length) {
+			return isValid;
+		}
 	};
 	private isEmpty = (value): boolean => {
 		const validation =
@@ -37,26 +45,40 @@ export default class RegisterValidator {
 		let regexEmail = new RegExp(
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 		);
-		user.name = !this.isEmpty(user.name) ? user.name : "";
-		user.email = !this.isEmpty(user.email) ? user.email : "";
-		user.password = !this.isEmpty(user.password) ? user.password : "";
-		user.confirmPassword = !this.isEmpty(user.confirmPassword)
-			? user.confirmPassword
-			: "";
+
+		//Validaciones nombre
+		if (this.isEmpty(user.name)) {
+			errors.name = "Nombre requerido";
+		}
 		if (!this.validator.isLength(user.name, 3, 20)) {
 			errors.name = "El nombre debe tener entre 3 y 20 caracteres";
 		}
 
+		//Validaciones nickname
+		if (this.isEmpty(user.nickname)) {
+			errors.nickname = "El nickname es requerido";
+		}
+		if (!this.validator.isLength(user.nickname, 3, 20)) {
+			errors.nickname = "El nickname debe tener entre 3 y 20 caracteres";
+		}
+
+		//Validaciones apellido
+		if (this.isEmpty(user.surname)) {
+			errors.surname = "El apellido es requerido";
+		}
+		if (!this.validator.isLength(user.surname, 3, 20)) {
+			errors.surname = "El apellido debe tener entre 3 y 20 caracteres";
+		}
+
+		//Validaciones email
 		if (this.isEmpty(user.email)) {
 			errors.email = "El email es requerido";
 		}
 		if (regexEmail.test(user.email)) {
 			errors.email = "El email ingresado no es válido";
 		}
-		if (this.isEmpty(user.name)) {
-			errors.name = "Nombre requerido";
-		}
 
+		//Validaciones contraseñas
 		if (this.isEmpty(user.password)) {
 			errors.password = "Contraseña requerida";
 		}
