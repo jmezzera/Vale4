@@ -15,26 +15,26 @@ var Card = /** @class */ (function () {
     }
     /**
      * @param other { Card } - Carta para comparar
-     * @param tableCard { Card } - Muestra
+     * @param sampleCard { Card } - Muestra
      * @returns {number} 1: si this es mas grande que other, -1 si other es mas grande que this o 0 si son iguales
      */
-    Card.prototype.compareTo = function (other, tableCard) {
-        if (this.isPieza(tableCard) || other.isPieza(tableCard)) {
-            if (this.isPieza(tableCard) && other.isPieza(other)) {
+    Card.prototype.compareTo = function (other, sampleCard) {
+        if (this.isPieza(sampleCard) || other.isPieza(sampleCard)) {
+            if (this.isPieza(sampleCard) && other.isPieza(other)) {
                 //Las dos son piezas
                 //En caso de que alguna de las dos sea el alcahuete, lo intercambio con la muestra
                 var _this = this;
                 if (this.number === 12) {
-                    _this = tableCard;
+                    _this = sampleCard;
                 }
                 else if (other.number === 12) {
-                    other = tableCard;
+                    other = sampleCard;
                 }
                 //Me fijo cuál aparece primero en el array piezas
                 return (-1 *
                     Math.sign(Card.piezas.indexOf(_this.number) - Card.piezas.indexOf(other.number)));
             }
-            if (this.isPieza(tableCard)) {
+            if (this.isPieza(sampleCard)) {
                 //Solo this es pieza
                 return 1;
             }
@@ -63,14 +63,14 @@ var Card = /** @class */ (function () {
             return 0;
         }
     };
-    Card.prototype.isPieza = function (tableCard) {
-        if (this.suit !== tableCard.suit)
+    Card.prototype.isPieza = function (sampleCard) {
+        if (this.suit !== sampleCard.suit)
             //Distinto palo
             return false;
         if (Card.piezas.includes(this.number))
             //Es pieza normal
             return true;
-        if (this.number === 12 && Card.piezas.includes(tableCard.number))
+        if (this.number === 12 && Card.piezas.includes(sampleCard.number))
             //Alcahuete
             return true;
         return false; //Otro caso
