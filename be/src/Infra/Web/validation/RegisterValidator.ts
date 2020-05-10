@@ -50,6 +50,7 @@ export default class RegisterValidator {
 		if (this.isEmpty(user.name)) {
 			errors.name = "Nombre requerido";
 		}
+
 		if (!this.validator.isLength(user.name, 3, 20)) {
 			errors.name = "El nombre debe tener entre 3 y 20 caracteres";
 		}
@@ -58,6 +59,7 @@ export default class RegisterValidator {
 		if (this.isEmpty(user.nickname)) {
 			errors.nickname = "El nickname es requerido";
 		}
+
 		if (!this.validator.isLength(user.nickname, 3, 20)) {
 			errors.nickname = "El nickname debe tener entre 3 y 20 caracteres";
 		}
@@ -66,6 +68,7 @@ export default class RegisterValidator {
 		if (this.isEmpty(user.surname)) {
 			errors.surname = "El apellido es requerido";
 		}
+
 		if (!this.validator.isLength(user.surname, 3, 20)) {
 			errors.surname = "El apellido debe tener entre 3 y 20 caracteres";
 		}
@@ -74,7 +77,8 @@ export default class RegisterValidator {
 		if (this.isEmpty(user.email)) {
 			errors.email = "El email es requerido";
 		}
-		if (regexEmail.test(user.email)) {
+
+		if (!regexEmail.test(user.email)) {
 			errors.email = "El email ingresado no es válido";
 		}
 
@@ -90,8 +94,9 @@ export default class RegisterValidator {
 
 		if (this.isEmpty(user.confirmPassword)) {
 			errors.confirmPassword = "Contraseña de confirmación requerida";
-		}
-		if (!this.validator.equals(user.password, user.confirmPassword)) {
+		} else if (
+			!this.validator.equals(user.password, user.confirmPassword)
+		) {
 			errors.confirmPassword =
 				"Las contraseñas ingresadas deben coincidir";
 		}

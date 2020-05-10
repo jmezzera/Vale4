@@ -57,26 +57,29 @@ var UserDBImpl = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, user_model_1.default.findOne({
-                                $or: [{ nickname: user.nickname, email: user.email }],
+                                $or: [{ nickname: user.nickname }, { email: user.email }],
                             })];
                     case 1:
                         findedUser = _a.sent();
+                        console.log(user.email);
                         if (!findedUser) return [3 /*break*/, 3];
                         return [4 /*yield*/, bcrypt.compare(user.password, findedUser.password)];
                     case 2:
                         isMatch = _a.sent();
+                        console.log(isMatch);
                         if (isMatch) {
                             token = this.getToken(findedUser.name, findedUser.id);
                             return [2 /*return*/, new LoggedUser_1.default(findedUser.nickname, findedUser.email, token)];
                         }
-                        _a.label = 3;
+                        return [3 /*break*/, 4];
                     case 3: return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];
-                    case 4:
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         err_1 = _a.sent();
                         throw new Error(err_1.message);
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

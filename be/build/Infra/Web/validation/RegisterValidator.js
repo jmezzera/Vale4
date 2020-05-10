@@ -62,7 +62,7 @@ var RegisterValidator = /** @class */ (function () {
             if (_this.isEmpty(user.email)) {
                 errors.email = "El email es requerido";
             }
-            if (regexEmail.test(user.email)) {
+            if (!regexEmail.test(user.email)) {
                 errors.email = "El email ingresado no es válido";
             }
             //Validaciones contraseñas
@@ -76,7 +76,7 @@ var RegisterValidator = /** @class */ (function () {
             if (_this.isEmpty(user.confirmPassword)) {
                 errors.confirmPassword = "Contraseña de confirmación requerida";
             }
-            if (!_this.validator.equals(user.password, user.confirmPassword)) {
+            else if (!_this.validator.equals(user.password, user.confirmPassword)) {
                 errors.confirmPassword =
                     "Las contraseñas ingresadas deben coincidir";
             }

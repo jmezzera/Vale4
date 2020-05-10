@@ -23,13 +23,15 @@ export default class UserDBImpl implements UsersDB {
 	async findUserToLogin(user: User): Promise<LoggedUser> {
 		try {
 			const findedUser = await UserModel.findOne({
-				$or: [{ nickname: user.nickname, email: user.email }],
+				$or: [{ nickname: user.nickname }, { email: user.email }],
 			});
+			console.log(user.email);
 			if (findedUser) {
 				let isMatch = await bcrypt.compare(
 					user.password,
 					findedUser.password
 				);
+				console.log(isMatch);
 				if (isMatch) {
 					let token = this.getToken(findedUser.name, findedUser.id);
 					return new LoggedUser(
@@ -38,8 +40,11 @@ export default class UserDBImpl implements UsersDB {
 						token
 					);
 				}
+			} else {
+				return Promise.reject(
+					"La contraseña o el usuario no coinciden."
+				);
 			}
-			return Promise.reject("La contraseña o el usuario no coinciden.");
 		} catch (err) {
 			throw new Error(err.message);
 		}
