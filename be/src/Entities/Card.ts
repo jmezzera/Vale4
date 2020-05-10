@@ -35,8 +35,7 @@ export default class Card {
                 let _this: Card = this;
                 if (this.number === 12) {
                     _this = tableCard;
-                }
-                if (other.number === 12) {
+                } else if (other.number === 12) {
                     other = tableCard;
                 }
                 //Me fijo cuál aparece primero en el array piezas

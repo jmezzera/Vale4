@@ -27,7 +27,7 @@ var Card = /** @class */ (function () {
                 if (this.number === 12) {
                     _this = tableCard;
                 }
-                if (other.number === 12) {
+                else if (other.number === 12) {
                     other = tableCard;
                 }
                 //Me fijo cuál aparece primero en el array piezas
