@@ -8,7 +8,11 @@ export default class LoginValidator {
 		this.validator = new Validator();
 	}
 
-	private existErrors = (errors): boolean => {
+	private existErrors = (errors: {
+		email: string;
+		nickname: string;
+		password: string;
+	}): boolean => {
 		let items = 0;
 		let isValid: boolean = false;
 		Object.keys(errors).forEach((property) => {
@@ -16,15 +20,12 @@ export default class LoginValidator {
 			if (errors[property] !== "") {
 				isValid = true;
 			}
-			if (items === Object.keys(errors).length) {
-				return isValid;
-			}
 		});
 		if (items === Object.keys(errors).length) {
 			return isValid;
 		}
 	};
-	private isEmpty = (value): boolean => {
+	private isEmpty = (value: string): boolean => {
 		const validation =
 			value === undefined ||
 			value === null ||

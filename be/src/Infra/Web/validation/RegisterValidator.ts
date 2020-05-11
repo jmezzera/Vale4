@@ -8,7 +8,14 @@ export default class RegisterValidator {
 		this.validator = new Validator();
 	}
 
-	private existErrors = (errors): boolean => {
+	private existErrors = (errors: {
+		name: string;
+		surname: string;
+		email: string;
+		nickname: string;
+		password: string;
+		confirmPassword: string;
+	}): boolean => {
 		let items = 0;
 		let isValid: boolean = false;
 		Object.keys(errors).forEach((property) => {
@@ -24,11 +31,10 @@ export default class RegisterValidator {
 			return isValid;
 		}
 	};
-	private isEmpty = (value): boolean => {
+	private isEmpty = (value: string): boolean => {
 		const validation =
 			value === undefined ||
 			value === null ||
-			(typeof value === "object" && Object.keys(value).length === 0) ||
 			(typeof value === "string" && value.trim().length === 0);
 		return validation;
 	};

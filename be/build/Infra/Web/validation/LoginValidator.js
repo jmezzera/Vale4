@@ -12,9 +12,6 @@ var LoginValidator = /** @class */ (function () {
                 if (errors[property] !== "") {
                     isValid = true;
                 }
-                if (items === Object.keys(errors).length) {
-                    return isValid;
-                }
             });
             if (items === Object.keys(errors).length) {
                 return isValid;
