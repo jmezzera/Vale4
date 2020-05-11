@@ -8,20 +8,31 @@ var SocketHandler_1 = require("./SocketHandler");
 var keys = require("../../../config/key");
 var StatusAPI_1 = require("./StatusAPI");
 var UsersAPI_1 = require("./UsersAPI");
+var TablesAPI_1 = require("./TablesAPI");
 var ExpressWebServer = /** @class */ (function () {
-    function ExpressWebServer(usersController) {
+    function ExpressWebServer(controllers) {
         this.app = express();
-        this.server = http.createServer(this.app);
-        this.socketHandler = new SocketHandler_1.default(this.server);
-        this.usersController = usersController;
-        this.usersAPI = new UsersAPI_1.default(this.usersController);
-        this.statusAPI = new StatusAPI_1.default();
-        this.connectToTheDatabase();
+        this._server = http.createServer(this.app);
+        //this.socketHandler = new SocketHandler(this.server);
         this.app.use(cors());
         this.app.use(express.json());
-        this.app.use("/status", this.statusAPI.router);
+        this.usersAPI = new UsersAPI_1.default(controllers.usersController);
         this.app.use("/users", this.usersAPI.router);
+        this.statusAPI = new StatusAPI_1.default();
+        this.app.use("/status", this.statusAPI.router);
+        this.tablesAPI = new TablesAPI_1.default(controllers.tablesController);
+        this.app.use("/tables", this.tablesAPI.router);
+        this.socketHandler = new SocketHandler_1.default(this._server, controllers.tablesController);
+        this.statusAPI = new StatusAPI_1.default();
+        this.connectToTheDatabase();
     }
+    Object.defineProperty(ExpressWebServer.prototype, "server", {
+        get: function () {
+            return this._server;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ExpressWebServer.prototype.connectToTheDatabase = function () {
         //const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
         var db = keys.mongoURI;

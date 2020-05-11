@@ -1,0 +1,1 @@
+{"version":3,"file":"FullTableException.js","sourceRoot":"","sources":["../../src/Exceptions/FullTableException.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA;IAAgD,sCAAK;IACjD,4BAAY,OAAe;;QAA3B,YACI,kBAAM,OAAO,CAAC,SAGjB;QAFG,MAAM,CAAC,cAAc,CAAC,KAAI,EAAE,WAAW,SAAS,CAAC,CAAC;QAClD,KAAI,CAAC,IAAI,GAAG,kBAAkB,CAAC,IAAI,CAAC;;IACxC,CAAC;IACL,yBAAC;AAAD,CAAC,AAND,CAAgD,KAAK,GAMpD"}
