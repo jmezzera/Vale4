@@ -5,17 +5,24 @@ var RegisterValidator = /** @class */ (function () {
     function RegisterValidator() {
         var _this = this;
         this.existErrors = function (errors) {
+            var items = 0;
+            var isValid = false;
             Object.keys(errors).forEach(function (property) {
+                items++;
                 if (errors[property] !== "") {
-                    return true;
+                    isValid = true;
+                }
+                if (items === Object.keys(errors).length) {
+                    return isValid;
                 }
             });
-            return false;
+            if (items === Object.keys(errors).length) {
+                return isValid;
+            }
         };
         this.isEmpty = function (value) {
             var validation = value === undefined ||
                 value === null ||
-                (typeof value === "object" && Object.keys(value).length === 0) ||
                 (typeof value === "string" && value.trim().length === 0);
             return validation;
         };
@@ -28,30 +35,49 @@ var RegisterValidator = /** @class */ (function () {
                 password: "",
                 confirmPassword: "",
             };
-            user.name = !_this.isEmpty(user.name) ? user.name : "";
-            user.email = !_this.isEmpty(user.email) ? user.email : "";
-            user.password = !_this.isEmpty(user.password) ? user.password : "";
-            user.confirmPassword = !_this.isEmpty(user.confirmPassword) ? user.confirmPassword : "";
-            if (!_this.validator.isLength(user.name, 2, 20)) {
-                errors.name = "Name must be between 2 and 20 characters";
-            }
-            /*if (this.validator.isEmail(user.email)) {
-                errors.email = "Email field is required";
-            }*/
+            //Validaciones nombre
             if (_this.isEmpty(user.name)) {
-                errors.name = "Name field is required";
+                errors.name = "Nombre requerido";
             }
+            if (!_this.validator.isLength(user.name, 3, 20)) {
+                errors.name = "El nombre debe tener entre 3 y 20 caracteres";
+            }
+            //Validaciones nickname
+            if (_this.isEmpty(user.nickname)) {
+                errors.nickname = "El nickname es requerido";
+            }
+            if (!_this.validator.isLength(user.nickname, 3, 20)) {
+                errors.nickname = "El nickname debe tener entre 3 y 20 caracteres";
+            }
+            //Validaciones apellido
+            if (_this.isEmpty(user.surname)) {
+                errors.surname = "El apellido es requerido";
+            }
+            if (!_this.validator.isLength(user.surname, 3, 20)) {
+                errors.surname = "El apellido debe tener entre 3 y 20 caracteres";
+            }
+            //Validaciones email
+            if (_this.isEmpty(user.email)) {
+                errors.email = "El email es requerido";
+            }
+            var regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+            if (!regexEmail.test(user.email)) {
+                errors.email = "El email ingresado no es válido";
+            }
+            //Validaciones contraseñas
             if (_this.isEmpty(user.password)) {
-                errors.password = "Passowrd field is required";
+                errors.password = "Contraseña requerida";
             }
             if (!_this.validator.isLength(user.password, 6, 30)) {
-                errors.password = "passowrd must be at least 6 characters and no more than 30.";
+                errors.password =
+                    "La contraseña debe tener una longitud mínima de 6 caracteres y no mayor a 30.";
             }
             if (_this.isEmpty(user.confirmPassword)) {
-                errors.confirmPassword = "Confirm passowrd field is required";
+                errors.confirmPassword = "Contraseña de confirmación requerida";
             }
-            if (!_this.validator.equals(user.password, user.confirmPassword)) {
-                errors.confirmPassword = "Passowrd must match";
+            else if (!_this.validator.equals(user.password, user.confirmPassword)) {
+                errors.confirmPassword =
+                    "Las contraseñas ingresadas deben coincidir";
             }
             return {
                 errors: errors,

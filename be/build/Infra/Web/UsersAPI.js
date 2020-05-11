@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var User_1 = require("../../Entities/User");
 var RegisterValidator_1 = require("./validation/RegisterValidator");
+var LoginValidator_1 = require("./validation/LoginValidator");
 var UsersAPI = /** @class */ (function () {
     function UsersAPI(usersController) {
         var _this = this;
         this.login = function (req, res) {
-            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password, req.body.confirmPassword, req.body.name, req.body.surname);
-            var resValid = _this.registerValidator.validateRegisterInput(user);
+            var user = new User_1.default(req.body.nickname, req.body.email, req.body.password);
+            var resValid = _this.loginValidator.validateLoginInput(user);
             var errors = resValid["errors"];
             var isNotValid = resValid["isNotValid"];
             // Check Validation
@@ -44,6 +45,7 @@ var UsersAPI = /** @class */ (function () {
         };
         this.usersController = usersController;
         this.registerValidator = new RegisterValidator_1.default();
+        this.loginValidator = new LoginValidator_1.default();
         this._router = express.Router();
         this.initializeRoutes();
     }

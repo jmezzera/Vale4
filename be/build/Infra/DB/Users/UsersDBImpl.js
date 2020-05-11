@@ -53,13 +53,13 @@ var UserDBImpl = /** @class */ (function () {
     };
     UserDBImpl.prototype.findUserToLogin = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var findedUser, isMatch, token, e_1;
+            var findedUser, isMatch, token, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, user_model_1.default.findOne({
-                                $or: [{ nickname: user.nickname, email: user.email }],
+                                $or: [{ nickname: user.nickname }, { email: user.email }],
                             })];
                     case 1:
                         findedUser = _a.sent();
@@ -69,24 +69,25 @@ var UserDBImpl = /** @class */ (function () {
                         isMatch = _a.sent();
                         if (isMatch) {
                             token = this.getToken(findedUser.name, findedUser.id);
-                            return [2 /*return*/, Promise.resolve(new LoggedUser_1.default(findedUser.nickname, findedUser.email, token))];
+                            return [2 /*return*/, new LoggedUser_1.default(findedUser.nickname, findedUser.email, token)];
                         }
                         else {
                             return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];
                         }
-                        _a.label = 3;
-                    case 3: return [3 /*break*/, 5];
-                    case 4:
-                        e_1 = _a.sent();
-                        return [2 /*return*/, e_1];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3: return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        err_1 = _a.sent();
+                        throw new Error(err_1.message);
+                    case 6: return [2 /*return*/];
                 }
             });
         });
     };
     UserDBImpl.prototype.addUser = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var hashedPassword, newUser, savedUser, token, e_2;
+            var hashedPassword, newUser, savedUser, token, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -104,10 +105,10 @@ var UserDBImpl = /** @class */ (function () {
                     case 1:
                         savedUser = _a.sent();
                         token = this.getToken(savedUser.name, savedUser.id);
-                        return [2 /*return*/, Promise.resolve(new LoggedUser_1.default(savedUser.nickname, savedUser.email, token))];
+                        return [2 /*return*/, new LoggedUser_1.default(savedUser.nickname, savedUser.email, token)];
                     case 2:
-                        e_2 = _a.sent();
-                        return [2 /*return*/, e_2];
+                        err_2 = _a.sent();
+                        throw new Error(err_2.message);
                     case 3: return [2 /*return*/];
                 }
             });

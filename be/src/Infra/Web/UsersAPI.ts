@@ -2,15 +2,18 @@ import * as express from "express";
 import UserController from "../../UseCases/UserController";
 import User from "../../Entities/User";
 import RegisterValidator from "./validation/RegisterValidator";
+import LoginValidator from "./validation/LoginValidator";
 
 export default class UsersAPI {
 	private _router: express.Router;
 	private usersController: UserController;
 	private registerValidator: RegisterValidator;
+	private loginValidator: LoginValidator;
 
 	constructor(usersController: UserController) {
 		this.usersController = usersController;
 		this.registerValidator = new RegisterValidator();
+		this.loginValidator = new LoginValidator();
 		this._router = express.Router();
 		this.initializeRoutes();
 	}
@@ -24,12 +27,9 @@ export default class UsersAPI {
 		let user = new User(
 			req.body.nickname,
 			req.body.email,
-			req.body.password,
-			req.body.confirmPassword,
-			req.body.name,
-			req.body.surname
+			req.body.password
 		);
-		const resValid = this.registerValidator.validateRegisterInput(user);
+		const resValid = this.loginValidator.validateLoginInput(user);
 		const errors = resValid["errors"];
 		const isNotValid = resValid["isNotValid"];
 
