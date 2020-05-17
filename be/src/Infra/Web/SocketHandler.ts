@@ -2,7 +2,7 @@ import * as http from "http";
 import * as socketIo from "socket.io";
 import TablesSessions from "./TablesSessions";
 import User from "../../Entities/User";
-import TablesController from "../../UsesCases/TablesController";
+import TablesController from "../../UseCases/TablesController";
 
 //TODO: tipar eventos
 

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ExpressWebServer_1 = require("./Infra/Web/ExpressWebServer");
 var UserControllerImpl_1 = require("./UseCases/UserControllerImpl");
 var UsersDBImpl_1 = require("./Infra/DB/Users/UsersDBImpl");
-var TablesControllerImpl_1 = require("./UsesCases/TablesControllerImpl");
+var TablesControllerImpl_1 = require("./UseCases/TablesControllerImpl");
 var TablesDBDummy_1 = require("./Infra/DB/TablesDBDummy");
 var SocketHandler_1 = require("./Infra/Web/SocketHandler");
 var Server = /** @class */ (function () {
