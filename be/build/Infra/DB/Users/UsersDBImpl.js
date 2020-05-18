@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var LoggedUser_1 = require("../../../Entities/LoggedUser");
+var User_1 = require("../../../Entities/User");
 var user_model_1 = require("../user.model");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
@@ -44,10 +45,10 @@ var keys = require("../../../../config/key");
 var UserDBImpl = /** @class */ (function () {
     function UserDBImpl() {
     }
-    UserDBImpl.prototype.getToken = function (name, _id) {
+    UserDBImpl.prototype.getToken = function (nickname, _id) {
         return ("Bearer " +
             jwt.sign({
-                name: name,
+                nickname: nickname,
                 id: _id,
             }, keys.secretOrKey));
     };
@@ -68,7 +69,7 @@ var UserDBImpl = /** @class */ (function () {
                     case 2:
                         isMatch = _a.sent();
                         if (isMatch) {
-                            token = this.getToken(findedUser.name, findedUser.id);
+                            token = this.getToken(findedUser.nickname, findedUser.id);
                             return [2 /*return*/, new LoggedUser_1.default(findedUser.nickname, findedUser.email, token)];
                         }
                         else {
@@ -104,13 +105,40 @@ var UserDBImpl = /** @class */ (function () {
                         return [4 /*yield*/, user_model_1.default.create(newUser)];
                     case 1:
                         savedUser = _a.sent();
-                        token = this.getToken(savedUser.name, savedUser.id);
+                        token = this.getToken(savedUser.nickname, savedUser.id);
                         return [2 /*return*/, new LoggedUser_1.default(savedUser.nickname, savedUser.email, token)];
                     case 2:
                         err_2 = _a.sent();
                         throw new Error(err_2.message);
                     case 3: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    UserDBImpl.prototype.validateToken = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var decoded, user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.decodeToken(token)];
+                    case 1:
+                        decoded = _a.sent();
+                        return [4 /*yield*/, user_model_1.default.findById(decoded.id)];
+                    case 2:
+                        user = _a.sent();
+                        return [2 /*return*/, new User_1.default(user.nickname, user.email, null, null, user.name, user.surname)];
+                }
+            });
+        });
+    };
+    UserDBImpl.prototype.decodeToken = function (token) {
+        return new Promise(function (resolve, reject) {
+            jwt.verify(token, keys.secretOrKey, function (err, decoded) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(decoded);
             });
         });
     };
