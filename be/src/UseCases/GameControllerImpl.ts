@@ -18,7 +18,9 @@ class GameControllerImpl implements GameController {
 		teamSize: number
 	): number {
 		let winnerTeam: number;
-		let orderArray = cardsInGame.sort(sampleCardInGame.compareTo);
+		let orderArray = cardsInGame.sort((cardA: Card, cardB: Card) => {
+			return cardA.compareTo(cardB, sampleCardInGame);
+		});
 		if (cardsInGame.indexOf(orderArray[0]) >= teamSize) {
 			winnerTeam = 0;
 		} else {
@@ -27,22 +29,23 @@ class GameControllerImpl implements GameController {
 		return winnerTeam;
 	}
 
-	/*
-                *
-                *Ver que pasa con la determinación de la última carta jugada
-                *
-                if (utlimoEventoCartaJugada == data.carta)
-                return;
-                utlimoEventoCartaJugada = data.carta;*/
+	private cambiarTurno(tableId: String) {
+		let currentHand = this._tables.get(tableId).shiftUser;
+		let indexCurrentHand = this._tables
+			.get(tableId)
+			.players.indexOf(currentHand);
+		if (indexCurrentHand == this._tables.get(tableId).players.length) {
+			indexCurrentHand = 0;
+			this._tables.get(tableId).shiftUser = this._tables.get(
+				tableId
+			).players[0];
+		} else {
+			this._tables.get(tableId).shiftUser = this._tables.get(
+				tableId
+			).players[indexCurrentHand];
+		}
+	}
 
-	/*hay carta en mesa? - Ver caso para 2 jugadores de momento
-                    //Si --> CambioTurno() (debe sumar al tanteador de cada equipo para la ronda)
-                                debo terminar ronda? (algún equipo/jugador ganó 2 manos)
-                                //Si --> valido quien ganó, sumo al tanteador y notifico que se deben levantar las cartas
-                                //No -- > No hago nada más
-                    //No --> ultimaCarta = cartaJugada;
-                                
-                Emito evento cartaJugada*/
 	/**
 	 * @param data
 	 * @param tableId
@@ -54,12 +57,25 @@ class GameControllerImpl implements GameController {
 		let numberOfPlayers = searchTable.playersQty;
 		//Se juegan todas las cartas necesarias para definir ganador de mano
 		if (searchTable.cardsInTable.length - 1 == numberOfPlayers) {
-			this.compareCardsInTable(
+			let winnerTeam = this.compareCardsInTable(
 				searchTable.cardsInTable,
 				searchTable.sampleCardInTable,
 				searchTable.playersQty / 2
 			);
+			if (winnerTeam) {
+				this._tables.get(tableId).tanteadorEquipo1 += 1;
+			} else {
+				this._tables.get(tableId).tanteadorEquipo2 += 1;
+			}
+			this.cambiarTurno(tableId);
+			return true;
 		} else {
+			let currentHand = this._tables.get(tableId).shiftUser;
+			let indexCurrentHand = this._tables
+				.get(tableId)
+				.players.indexOf(currentHand);
+			this.cambiarTurno(tableId);
+			this._tables.get(tableId).cardsInTable[indexCurrentHand] = data;
 			return false;
 		}
 	}

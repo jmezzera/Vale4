@@ -14,6 +14,7 @@ export default class Table {
 	private _sampleCardInTable: Card;
 	private _tanteadorEquipo1: number;
 	private _tanteadorEquipo2: number;
+	private _shiftUser: User;
 
 	constructor(
 		name: string,
@@ -153,5 +154,28 @@ export default class Table {
 	 */
 	public set tanteadorEquipo1(value: number) {
 		this._tanteadorEquipo1 = value;
+	}
+	/**
+	 * Getter shiftUser
+	 * @return {User}
+	 */
+	public get shiftUser(): User {
+		return this._shiftUser;
+	}
+
+	/**
+	 * Setter shiftUser
+	 * @param {User} value
+	 */
+	public set shiftUser(value: User) {
+		this._shiftUser = value;
+	}
+
+	/**
+	 * Getter players
+	 * @return {User[]}
+	 */
+	public get players(): User[] {
+		return this._players;
 	}
 }
