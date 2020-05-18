@@ -1,5 +1,5 @@
 import * as express from "express";
-import TablesController from "../../UsesCases/TablesController";
+import TablesController from "../../UseCases/TablesController";
 import User from "../../Entities/User";
 const userDummy = new User("jk", "jk");
 export default class TablesAPI {

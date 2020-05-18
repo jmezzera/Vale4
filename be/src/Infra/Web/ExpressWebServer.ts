@@ -11,7 +11,7 @@ import * as keys from "../../../config/key";
 import StatusAPI from "./StatusAPI";
 import UsersAPI from "./UsersAPI";
 import TablesAPI from "./TablesAPI";
-import TablesController from "../../UsesCases/TablesController";
+import TablesController from "../../UseCases/TablesController";
 
 export default class ExpressWebServer implements WebServer {
     private _server: http.Server;
