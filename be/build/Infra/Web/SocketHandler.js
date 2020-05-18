@@ -37,13 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var socketIo = require("socket.io");
-var User_1 = require("../../Entities/User");
 //TODO: tipar eventos
 var SocketHandler = /** @class */ (function () {
-    function SocketHandler(server, tablesController) {
+    function SocketHandler(server, tablesController, userController) {
         this.io = socketIo(server);
         this.tables = new Map();
         this.tablesController = tablesController;
+        this.userController = userController;
+        console.trace();
+        console.log("constructor", userController);
+        this.createTable = this.createTable.bind(this);
     }
     SocketHandler.prototype.createTable = function (id) {
         var _this = this;
@@ -55,15 +58,34 @@ var SocketHandler = /** @class */ (function () {
         tableNamespace.on("connect", function (socket) {
             console.log("Conectado a " + id);
             socket.on("discover", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var parsedData, user;
+                var parsedData, user, err_1;
                 return __generator(this, function (_a) {
-                    parsedData = JSON.parse(data);
-                    user = new User_1.default(parsedData.username, parsedData.username);
-                    if (!user) {
-                        socket.disconnect();
+                    switch (_a.label) {
+                        case 0:
+                            console.log(this);
+                            console.log(this.userController);
+                            parsedData = JSON.parse(data);
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, this.userController.validateToken(parsedData.token)];
+                        case 2:
+                            user = _a.sent();
+                            console.log(user);
+                            if (user.nickname === parsedData.username)
+                                this.tablesController.playerConnected(id, user);
+                            else {
+                                socket.emit("Forbidden");
+                                socket.disconnect();
+                            }
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_1 = _a.sent();
+                            socket.emit("Forbidden");
+                            socket.disconnect();
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
                     }
-                    this.tablesController.playerConnected(id, user);
-                    return [2 /*return*/];
                 });
             }); });
         });

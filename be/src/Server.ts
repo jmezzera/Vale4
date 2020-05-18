@@ -28,7 +28,8 @@ export default class Server {
         });
         this.tablesSessionController = new SocketHandler(
             this.webServer.server,
-            this.tablesController
+            this.tablesController,
+            this.usersController
         );
         this.tablesController.tablesSessionController = this.tablesSessionController;
     }

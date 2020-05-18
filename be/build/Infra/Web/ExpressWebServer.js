@@ -4,7 +4,6 @@ var express = require("express");
 var cors = require("cors");
 var http = require("http");
 var mongoose = require("mongoose");
-var SocketHandler_1 = require("./SocketHandler");
 var keys = require("../../../config/key");
 var StatusAPI_1 = require("./StatusAPI");
 var UsersAPI_1 = require("./UsersAPI");
@@ -24,7 +23,6 @@ var ExpressWebServer = /** @class */ (function () {
         this.app.use("/status", this.statusAPI.router);
         this.tablesAPI = new TablesAPI_1.default(controllers.tablesController, this.usersMiddleWare);
         this.app.use("/tables", this.tablesAPI.router);
-        this.socketHandler = new SocketHandler_1.default(this._server, controllers.tablesController);
         this.statusAPI = new StatusAPI_1.default();
         this.connectToTheDatabase();
     }
