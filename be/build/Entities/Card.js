@@ -124,6 +124,18 @@ var Card = /** @class */ (function () {
         new Card(Suit.Oro, 7),
     ];
     Card.normalCards = [3, 2, 1, 12, 11, 10, 7, 6, 5, 4];
+    Card.getAllCards = function () {
+        var allCards = [];
+        var suits = [Suit.Copa, Suit.Basto, Suit.Espada, Suit.Oro];
+        for (var _i = 0, suits_1 = suits; _i < suits_1.length; _i++) {
+            var suit = suits_1[_i];
+            for (var _a = 0, _b = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12]; _a < _b.length; _a++) {
+                var number = _b[_a];
+                allCards.push(new Card(suit, number));
+            }
+        }
+        return allCards;
+    };
     return Card;
 }());
 exports.default = Card;

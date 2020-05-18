@@ -16,6 +16,16 @@ export default class Card {
         new Card(Suit.Oro, 7),
     ];
     public static normalCards = [3, 2, 1, 12, 11, 10, 7, 6, 5, 4];
+    public static getAllCards = () => {
+        let allCards: Card[] = [];
+        const suits = [Suit.Copa, Suit.Basto, Suit.Espada, Suit.Oro];
+        for (let suit of suits) {
+            for (let number of [1, 2, 3, 4, 5, 6, 7, 10, 11, 12]) {
+                allCards.push(new Card(suit, number));
+            }
+        }
+        return allCards;
+    };
 
     constructor(suit: Suit, number: number) {
         this._suit = suit;
