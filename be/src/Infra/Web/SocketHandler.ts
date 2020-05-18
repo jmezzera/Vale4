@@ -3,17 +3,28 @@ import * as socketIo from "socket.io";
 import TablesSessions from "./TablesSessions";
 import User from "../../Entities/User";
 import TablesController from "../../UseCases/TablesController";
+import UserController from "../../UseCases/UserController";
 
 //TODO: tipar eventos
 
 export default class SocketHandler implements TablesSessions {
     private io: socketIo.Server;
     private tablesController: TablesController;
+    private userController: UserController;
     private tables: Map<string, socketIo.Namespace>;
-    constructor(server: http.Server, tablesController: TablesController) {
+    constructor(
+        server: http.Server,
+        tablesController: TablesController,
+        userController: UserController
+    ) {
         this.io = socketIo(server);
         this.tables = new Map<string, socketIo.Namespace>();
         this.tablesController = tablesController;
+        this.userController = userController;
+        console.trace();
+        console.log("constructor", userController);
+
+        this.createTable = this.createTable.bind(this);
     }
 
     public createTable(id: string): void {
@@ -25,13 +36,25 @@ export default class SocketHandler implements TablesSessions {
         tableNamespace.on("connect", socket => {
             console.log("Conectado a " + id);
             socket.on("discover", async (data: string) => {
-                let parsedData: { username: string; token: string } = JSON.parse(data);
+                console.log(this);
+                console.log(this.userController);
 
-                let user: User = new User(parsedData.username, parsedData.username); // Habria que validarlo con el controlador de usuarios
-                if (!user) {
+                let parsedData: { username: string; token: string } = JSON.parse(data);
+                let user: User;
+                try {
+                    user = await this.userController.validateToken(parsedData.token);
+                    console.log(user);
+
+                    if (user.nickname === parsedData.username)
+                        this.tablesController.playerConnected(id, user);
+                    else {
+                        socket.emit("Forbidden");
+                        socket.disconnect();
+                    }
+                } catch (err) {
+                    socket.emit("Forbidden");
                     socket.disconnect();
                 }
-                this.tablesController.playerConnected(id, user);
             });
         });
     }

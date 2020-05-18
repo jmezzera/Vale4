@@ -36,61 +36,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var socketIo = require("socket.io");
-//TODO: tipar eventos
-var SocketHandler = /** @class */ (function () {
-    function SocketHandler(server, tablesController, userController) {
-        this.io = socketIo(server);
-        this.tables = new Map();
-        this.tablesController = tablesController;
-        this.userController = userController;
-        console.trace();
-        console.log("constructor", userController);
-        this.createTable = this.createTable.bind(this);
-    }
-    SocketHandler.prototype.createTable = function (id) {
+var UsersMW = /** @class */ (function () {
+    function UsersMW(userController) {
         var _this = this;
-        if (this.tables.has(id)) {
-            throw new Error("Mesa ya existe");
-        }
-        var tableNamespace = this.io.of(id);
-        this.tables.set(id, tableNamespace);
-        tableNamespace.on("connect", function (socket) {
-            console.log("Conectado a " + id);
-            socket.on("discover", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var parsedData, user, err_1;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            console.log(this);
-                            console.log(this.userController);
-                            parsedData = JSON.parse(data);
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, this.userController.validateToken(parsedData.token)];
-                        case 2:
-                            user = _a.sent();
-                            console.log(user);
-                            if (user.nickname === parsedData.username)
-                                this.tablesController.playerConnected(id, user);
-                            else {
-                                socket.emit("Forbidden");
-                                socket.disconnect();
-                            }
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_1 = _a.sent();
-                            socket.emit("Forbidden");
-                            socket.disconnect();
-                            return [3 /*break*/, 4];
-                        case 4: return [2 /*return*/];
-                    }
-                });
-            }); });
-        });
-    };
-    return SocketHandler;
+        this.validateToken = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var tokenHeader, _a, authType, token, _b, user, err_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        tokenHeader = req.headers.token;
+                        if (!tokenHeader) {
+                            res.status(401).send("Token header must be present");
+                            return [2 /*return*/];
+                        }
+                        _a = tokenHeader.split(" "), authType = _a[0], token = _a[1];
+                        _b = authType;
+                        switch (_b) {
+                            case "Bearer": return [3 /*break*/, 1];
+                        }
+                        return [3 /*break*/, 6];
+                    case 1:
+                        user = void 0;
+                        _c.label = 2;
+                    case 2:
+                        _c.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, this.userController.validateToken(token)];
+                    case 3:
+                        user = _c.sent();
+                        res.locals.user = user;
+                        next();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_1 = _c.sent();
+                        res.status(403).send("Invalid token");
+                        return [3 /*break*/, 5];
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        res.status(400).send("Authentication method not supported");
+                        _c.label = 7;
+                    case 7: return [2 /*return*/];
+                }
+            });
+        }); };
+        this.userController = userController;
+    }
+    return UsersMW;
 }());
-exports.default = SocketHandler;
-//# sourceMappingURL=SocketHandler.js.map
+exports.default = UsersMW;
+//# sourceMappingURL=Users.js.map
