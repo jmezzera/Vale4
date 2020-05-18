@@ -21,19 +21,19 @@ export default class UserDBImpl implements UsersDB {
 	}
 	async findUserToLogin(user: User): Promise<LoggedUser> {
 		try {
-			const findedUser = await UserModel.findOne({
+			const foundUser = await UserModel.findOne({
 				$or: [{ nickname: user.nickname }, { email: user.email }],
 			});
-			if (findedUser) {
+			if (foundUser) {
 				let isMatch = await bcrypt.compare(
 					user.password,
-					findedUser.password
+					foundUser.password
 				);
 				if (isMatch) {
-					let token = this.getToken(findedUser.name, findedUser.id);
+					let token = this.getToken(foundUser.name, foundUser.id);
 					return new LoggedUser(
-						findedUser.nickname,
-						findedUser.email,
+						foundUser.nickname,
+						foundUser.email,
 						token
 					);
 				} else {
