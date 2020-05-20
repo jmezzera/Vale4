@@ -1,8 +1,8 @@
-import { GameController } from "./GameController";
+import GameController from "./GameController";
 import Card from "../Entities/Card";
 import Table from "../Entities/Table";
 
-class GameControllerImpl implements GameController {
+export default class GameControllerImpl implements GameController {
 	private _tables: Map<String, Table>;
 	constructor() {}
 

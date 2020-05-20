@@ -1,5 +1,5 @@
 import Card from "../Entities/Card";
 
-export interface GameController {
+export default interface GameController {
 	takeGameDecision(data: Card, tableId: String): boolean;
 }
