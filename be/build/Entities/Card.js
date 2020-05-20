@@ -75,6 +75,29 @@ var Card = /** @class */ (function () {
             return true;
         return false; //Otro caso
     };
+    Card.prototype.getPoints = function (sampleCard) {
+        if (!this.isPieza(sampleCard)) {
+            if (this.number >= 10) {
+                return 0;
+            }
+            else {
+                return this.number;
+            }
+        }
+        else {
+            var _this = this;
+            if (this.number === 12) {
+                _this = sampleCard;
+            }
+            var index = Card.piezas.indexOf(_this.number);
+            if (index <= 3) {
+                return 10 - index;
+            }
+            else {
+                return 7;
+            }
+        }
+    };
     /**
      * @description Verifica si esta carta (this) es mata
      * @returns {number} -1 si no es mata, el índice en el array matas en caso de serlo

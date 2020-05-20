@@ -97,6 +97,27 @@ export default class Card {
         return false; //Otro caso
     }
 
+    public getPoints(sampleCard: Card): number {
+        if (!this.isPieza(sampleCard)) {
+            if (this.number >= 10) {
+                return 0;
+            } else {
+                return this.number;
+            }
+        } else {
+            let _this: Card = this;
+            if (this.number === 12) {
+                _this = sampleCard;
+            }
+            let index = Card.piezas.indexOf(_this.number);
+            if (index <= 3) {
+                return 10 - index;
+            } else {
+                return 7;
+            }
+        }
+    }
+
     /**
      * @description Verifica si esta carta (this) es mata
      * @returns {number} -1 si no es mata, el índice en el array matas en caso de serlo
