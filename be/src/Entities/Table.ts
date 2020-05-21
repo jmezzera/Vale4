@@ -40,6 +40,7 @@ export default class Table {
 
 	public connectPlayer(player: User): void {
 		const nickname = player.nickname;
+		console.log(player.nickname)
 		let awaitingPlayer = this._awaitingPlayers.find(
 			(player) => player.nickname === nickname
 		);

@@ -4,8 +4,7 @@ import TablesSessions from "./TablesSessions";
 import User from "../../Entities/User";
 import TablesController from "../../UseCases/TablesController";
 import Card from "../../Entities/Card";
-import { cambioTurno } from "./SocketUtilities";
-import { GameController } from "../../UseCases/GameController";
+import GameController from "../../UseCases/GameController";
 
 //TODO: tipar eventos
 
@@ -49,6 +48,7 @@ export default class SocketHandler implements TablesSessions {
 				this.tablesController.playerConnected(id, user);
 			});
 			socket.on("playCard", (data: Card) => {
+				console.log("CARTA");
 				this.io.sockets.to(id).emit("cartaJugada", data);
 				let deleteCardsOnTable = this.gameController.takeGameDecision(
 					data,
