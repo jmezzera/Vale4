@@ -65,6 +65,12 @@ var Game = /** @class */ (function () {
             return Math.max.apply(Math, cards.map(function (card) { return card.getPoints(sampleCard); }));
         }
     };
+    Game.prototype.countFlower = function (cards, sampleCard) {
+        if (!this.validateFlower(cards, sampleCard)) {
+            throw new Error("Not Flower");
+        }
+        return 20 + cards.reduce(function (prev, curr) { return prev + curr.getPoints(sampleCard); }, 0);
+    };
     return Game;
 }());
 exports.default = Game;

@@ -64,4 +64,11 @@ export default class Game {
             return Math.max(...cards.map(card => card.getPoints(sampleCard)));
         }
     }
+
+    public countFlower(cards: Card[], sampleCard: Card): number {
+        if (!this.validateFlower(cards, sampleCard)) {
+            throw new Error("Not Flower");
+        }
+        return 20 + cards.reduce((prev, curr) => prev + curr.getPoints(sampleCard), 0);
+    }
 }
