@@ -3,8 +3,9 @@ import * as socketIo from "socket.io";
 import TablesSessions from "./TablesSessions";
 import User from "../../Entities/User";
 import TablesController from "../../UseCases/TablesController";
-import Card from "../../Entities/Card";
+import Card, { Suit } from "../../Entities/Card";
 import GameController from "../../UseCases/GameController";
+import MissingDataException from "../../Exceptions/MissingDataException";
 
 //TODO: tipar eventos
 
@@ -47,12 +48,38 @@ export default class SocketHandler implements TablesSessions {
 				}
 				this.tablesController.playerConnected(id, user);
 			});
-			socket.on("playCard", (data: Card) => {
-				console.log("CARTA");
-				this.io.sockets.to(id).emit("cartaJugada", data);
+
+			socket.on("playCard", async (data: string) => {
+				let parsedData: {
+					suit: string;
+					number: number;
+					nickname: string;
+					email: string;
+				} = JSON.parse(data);
+				let card: Card;
+				switch (parsedData.suit) {
+					case "Oro":
+						card = new Card(Suit.Oro, parsedData.number);
+						break;
+					case "Basto":
+						card = new Card(Suit.Basto, parsedData.number);
+						break;
+					case "Espada":
+						card = new Card(Suit.Espada, parsedData.number);
+						break;
+					case "Copa":
+						card = new Card(Suit.Copa, parsedData.number);
+						break;
+					default:
+						throw new MissingDataException(
+							"Suit parameter is missing."
+						);
+				}
+				this.io.sockets.to(id).emit("cartaJugada", card);
 				let deleteCardsOnTable = this.gameController.takeGameDecision(
-					data,
-					id
+					card,
+					id,
+					new User(parsedData.nickname, parsedData.email)
 				);
 				if (deleteCardsOnTable) {
 					this.io.sockets.emit("deleteCards", null);

@@ -7,7 +7,9 @@ var TablesAPI = /** @class */ (function () {
     function TablesAPI(tablesController) {
         var _this = this;
         this.getTables = function (req, res) {
-            _this.tablesController.getTables().then(function (tables) { return res.status(200).send(tables); });
+            _this.tablesController
+                .getTables()
+                .then(function (tables) { return res.status(200).send(tables); });
         };
         this.createTable = function (req, res) {
             var _a = req.body, name = _a.name, playersQty = _a.playersQty, isProtected = _a.isProtected, password = _a.password;

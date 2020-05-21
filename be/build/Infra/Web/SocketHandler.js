@@ -38,12 +38,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var socketIo = require("socket.io");
 var User_1 = require("../../Entities/User");
+var Card_1 = require("../../Entities/Card");
+var MissingDataException_1 = require("../../Exceptions/MissingDataException");
 //TODO: tipar eventos
 var SocketHandler = /** @class */ (function () {
-    function SocketHandler(server, tablesController) {
+    function SocketHandler(server, tablesController, gameController) {
         this.io = socketIo(server);
         this.tables = new Map();
         this.tablesController = tablesController;
+        this.gameController = gameController;
     }
     SocketHandler.prototype.createTable = function (id) {
         var _this = this;
@@ -63,6 +66,34 @@ var SocketHandler = /** @class */ (function () {
                         socket.disconnect();
                     }
                     this.tablesController.playerConnected(id, user);
+                    return [2 /*return*/];
+                });
+            }); });
+            socket.on("playCard", function (data) { return __awaiter(_this, void 0, void 0, function () {
+                var parsedData, card, deleteCardsOnTable;
+                return __generator(this, function (_a) {
+                    parsedData = JSON.parse(data);
+                    switch (parsedData.suit) {
+                        case "Oro":
+                            card = new Card_1.default(Card_1.Suit.Oro, parsedData.number);
+                            break;
+                        case "Basto":
+                            card = new Card_1.default(Card_1.Suit.Basto, parsedData.number);
+                            break;
+                        case "Espada":
+                            card = new Card_1.default(Card_1.Suit.Espada, parsedData.number);
+                            break;
+                        case "Copa":
+                            card = new Card_1.default(Card_1.Suit.Copa, parsedData.number);
+                            break;
+                        default:
+                            throw new MissingDataException_1.default("Suit parameter is missing.");
+                    }
+                    this.io.sockets.to(id).emit("cartaJugada", card);
+                    deleteCardsOnTable = this.gameController.takeGameDecision(card, id, new User_1.default(parsedData.nickname, parsedData.email));
+                    if (deleteCardsOnTable) {
+                        this.io.sockets.emit("deleteCards", null);
+                    }
                     return [2 /*return*/];
                 });
             }); });

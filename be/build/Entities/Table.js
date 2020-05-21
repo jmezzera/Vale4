@@ -8,6 +8,8 @@ var Table = /** @class */ (function () {
         this._name = name;
         this._playersQty = playersQty;
         this._isProtected = isProtected;
+        this.tanteadorEquipo1 = 0;
+        this.tanteadorEquipo2 = 0;
         this._password = password;
         this._players = [];
         this._awaitingPlayers = [];
@@ -21,6 +23,7 @@ var Table = /** @class */ (function () {
     };
     Table.prototype.connectPlayer = function (player) {
         var nickname = player.nickname;
+        console.log(player.nickname);
         var awaitingPlayer = this._awaitingPlayers.find(function (player) { return player.nickname === nickname; });
         if (!awaitingPlayer) {
             throw new Error(); //FIXME: manejar caso borde
@@ -68,6 +71,136 @@ var Table = /** @class */ (function () {
          */
         get: function () {
             return this._password;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "cardsInTable", {
+        /**
+         * Getter cardsInTable
+         * @return {Card[]}
+         */
+        get: function () {
+            return this._cardsInTable;
+        },
+        /**
+         * Setter cardsInTable
+         * @param {card[]} value
+         */
+        set: function (value) {
+            this._cardsInTable = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "sampleCardInTable", {
+        /**
+         * Getter sampleCardInTable
+         * @return {Card}
+         */
+        get: function () {
+            return this._sampleCardInTable;
+        },
+        /**
+         * Setter sampleCardInTable
+         * @param {card} value
+         */
+        set: function (value) {
+            this._sampleCardInTable = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "playersQty", {
+        /**
+         * Getter playersQty
+         * @return {number}
+         */
+        get: function () {
+            return this._playersQty;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "tanteadorEquipo1", {
+        /**
+         * Getter tanteadorEquipo1
+         * @return {number}
+         */
+        get: function () {
+            return this._tanteadorEquipo1;
+        },
+        /**
+         * Setter tanteadorEquipo1
+         * @param {number} value
+         */
+        set: function (value) {
+            this._tanteadorEquipo1 = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "tanteadorEquipo2", {
+        /**
+         * Getter tanteadorEquipo2
+         * @return {number}
+         */
+        get: function () {
+            return this._tanteadorEquipo2;
+        },
+        /**
+         * Setter tanteadorEquipo2
+         * @param {number} value
+         */
+        set: function (value) {
+            this._tanteadorEquipo2 = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "shiftUser", {
+        /**
+         * Getter shiftUser
+         * @return {User}
+         */
+        get: function () {
+            return this._shiftUser;
+        },
+        /**
+         * Setter shiftUser
+         * @param {User} value
+         */
+        set: function (value) {
+            this._shiftUser = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "players", {
+        /**
+         * Getter players
+         * @return {User[]}
+         */
+        get: function () {
+            return this._players;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Table.prototype, "shuffledUser", {
+        /**
+         * Getter shuffledUser
+         * @return {User}
+         */
+        get: function () {
+            return this._shuffledUser;
+        },
+        /**
+         * Setter shuffledUser
+         * @param {User} value
+         */
+        set: function (value) {
+            this._shuffledUser = value;
         },
         enumerable: true,
         configurable: true

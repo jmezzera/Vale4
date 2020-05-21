@@ -32,7 +32,8 @@ var Card = /** @class */ (function () {
                 }
                 //Me fijo cuál aparece primero en el array piezas
                 return (-1 *
-                    Math.sign(Card.piezas.indexOf(_this.number) - Card.piezas.indexOf(other.number)));
+                    Math.sign(Card.piezas.indexOf(_this.number) -
+                        Card.piezas.indexOf(other.number)));
             }
             if (this.isPieza(sampleCard)) {
                 //Solo this es pieza
@@ -53,10 +54,12 @@ var Card = /** @class */ (function () {
             }
             return -1;
         }
-        if (Card.normalCards.indexOf(this.number) < Card.normalCards.indexOf(other.number)) {
+        if (Card.normalCards.indexOf(this.number) <
+            Card.normalCards.indexOf(other.number)) {
             return 1;
         }
-        else if (Card.normalCards.indexOf(this.number) > Card.normalCards.indexOf(other.number)) {
+        else if (Card.normalCards.indexOf(this.number) >
+            Card.normalCards.indexOf(other.number)) {
             return -1;
         }
         else {

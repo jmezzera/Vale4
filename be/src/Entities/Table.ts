@@ -10,11 +10,12 @@ export default class Table {
 	private _playersQty: number;
 	private _isProtected: boolean;
 	private _password: string;
-	private _cardsInTable: Card[];
+	private _cardsInTable: Card[][];
 	private _sampleCardInTable: Card;
 	private _tanteadorEquipo1: number;
 	private _tanteadorEquipo2: number;
 	private _shiftUser: User;
+	private _shuffledUser: User;
 
 	constructor(
 		name: string,
@@ -25,6 +26,8 @@ export default class Table {
 		this._name = name;
 		this._playersQty = playersQty;
 		this._isProtected = isProtected;
+		this.tanteadorEquipo1 = 0;
+		this.tanteadorEquipo2 = 0;
 		this._password = password;
 		this._players = [];
 		this._awaitingPlayers = [];
@@ -40,7 +43,7 @@ export default class Table {
 
 	public connectPlayer(player: User): void {
 		const nickname = player.nickname;
-		console.log(player.nickname)
+		console.log(player.nickname);
 		let awaitingPlayer = this._awaitingPlayers.find(
 			(player) => player.nickname === nickname
 		);
@@ -178,5 +181,21 @@ export default class Table {
 	 */
 	public get players(): User[] {
 		return this._players;
+	}
+
+	/**
+	 * Setter shuffledUser
+	 * @param {User} value
+	 */
+	public set shuffledUser(value: User) {
+		this._shuffledUser = value;
+	}
+
+	/**
+	 * Getter shuffledUser
+	 * @return {User}
+	 */
+	public get shuffledUser(): User {
+		return this._shuffledUser;
 	}
 }

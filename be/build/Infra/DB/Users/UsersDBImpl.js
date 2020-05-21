@@ -53,7 +53,7 @@ var UserDBImpl = /** @class */ (function () {
     };
     UserDBImpl.prototype.findUserToLogin = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var findedUser, isMatch, token, err_1;
+            var foundUser, isMatch, token, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -62,14 +62,14 @@ var UserDBImpl = /** @class */ (function () {
                                 $or: [{ nickname: user.nickname }, { email: user.email }],
                             })];
                     case 1:
-                        findedUser = _a.sent();
-                        if (!findedUser) return [3 /*break*/, 3];
-                        return [4 /*yield*/, bcrypt.compare(user.password, findedUser.password)];
+                        foundUser = _a.sent();
+                        if (!foundUser) return [3 /*break*/, 3];
+                        return [4 /*yield*/, bcrypt.compare(user.password, foundUser.password)];
                     case 2:
                         isMatch = _a.sent();
                         if (isMatch) {
-                            token = this.getToken(findedUser.name, findedUser.id);
-                            return [2 /*return*/, new LoggedUser_1.default(findedUser.nickname, findedUser.email, token)];
+                            token = this.getToken(foundUser.name, foundUser.id);
+                            return [2 /*return*/, new LoggedUser_1.default(foundUser.nickname, foundUser.email, token)];
                         }
                         else {
                             return [2 /*return*/, Promise.reject("La contraseña o el usuario no coinciden.")];

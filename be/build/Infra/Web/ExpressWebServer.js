@@ -22,7 +22,7 @@ var ExpressWebServer = /** @class */ (function () {
         this.app.use("/status", this.statusAPI.router);
         this.tablesAPI = new TablesAPI_1.default(controllers.tablesController);
         this.app.use("/tables", this.tablesAPI.router);
-        this.socketHandler = new SocketHandler_1.default(this._server, controllers.tablesController);
+        this.socketHandler = new SocketHandler_1.default(this._server, controllers.tablesController, controllers.gameController);
         this.statusAPI = new StatusAPI_1.default();
         this.connectToTheDatabase();
     }

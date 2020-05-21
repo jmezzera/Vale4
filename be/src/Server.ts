@@ -26,7 +26,7 @@ export default class Server {
 		this.usersController = new UserControllerImpl(this.userDB);
 		this.tablesDB = new TablesDBDummy();
 		this.tablesController = new TablesControllerImpl(this.tablesDB);
-		this.gameController = new GameControllerImpl();
+		this.gameController = new GameControllerImpl(this.tablesController);
 		this.webServer = new ExpressWebServer({
 			tablesController: this.tablesController,
 			usersController: this.usersController,

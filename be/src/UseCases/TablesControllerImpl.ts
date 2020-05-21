@@ -34,7 +34,7 @@ export default class TablesControllerImpl implements TablesController {
 		return tableWithDBId;
 	}
 
-	public getTables(): Promise<Table[]> {
+	public async getTables(): Promise<Table[]> {
 		return this.tablesDB.getTables();
 	}
 
