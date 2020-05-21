@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Card_1 = require("../Entities/Card");
 var Game = /** @class */ (function () {
     function Game() {
     }
@@ -29,6 +30,40 @@ var Game = /** @class */ (function () {
         }
         else
             return false; //Ya se descartó el caso de 3 del mismo palo
+    };
+    Game.prototype.countTouch = function (cards, sampleCard) {
+        if (this.validateFlower(cards, sampleCard)) {
+            throw new Error("Cannot calculate touch on flower");
+        }
+        var piece = cards.find(function (card) { return card.isPieza(sampleCard); });
+        if (piece) {
+            var notPieces = cards.filter(function (card) { return !card.isPieza(sampleCard); });
+            //notPieces tiene largo 2. Hay mínimo una pieza (el if lo verifica) y máximo 1 pieza (si hubiera más sería flor)
+            var biggestCard = Math.max(notPieces[0].getPoints(sampleCard), notPieces[1].getPoints(sampleCard));
+            return 20 + piece.getPoints(sampleCard) + biggestCard;
+        }
+        var suitsQtys = cards
+            .map(function (card) { return card.suit; })
+            .reduce(function (prev, curr) {
+            if (prev[Card_1.Suit[curr]]) {
+                prev[Card_1.Suit[curr]]++;
+            }
+            else {
+                prev[Card_1.Suit[curr]] = 1;
+            }
+            return prev;
+        }, {});
+        if (Math.max.apply(Math, Object.values(suitsQtys)) === 2) {
+            var suitName_1 = Object.keys(suitsQtys).find(function (suitName) { return suitsQtys[suitName] === 2; });
+            var cardsOfThatSuit = cards.filter(function (card) { return card.suit === Card_1.Suit[suitName_1]; });
+            return (20 +
+                cardsOfThatSuit[0].getPoints(sampleCard) +
+                cardsOfThatSuit[1].getPoints(sampleCard));
+        }
+        else {
+            //Todas de distinto palo
+            return Math.max.apply(Math, cards.map(function (card) { return card.getPoints(sampleCard); }));
+        }
     };
     return Game;
 }());
