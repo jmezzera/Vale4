@@ -1,10 +1,11 @@
 import User from "./User";
 import FullTableException from "../Exceptions/FullTableException";
+import Player from "./Player";
 
 export default class Table {
     private _id: string;
     private _name: string;
-    private _players: User[];
+    private _players: Player[];
     private _awaitingPlayers: User[];
     private _playersQty: number;
     private _isProtected: boolean;
@@ -41,7 +42,7 @@ export default class Table {
         this._awaitingPlayers = this._awaitingPlayers.filter(
             player => player.nickname !== nickname
         ); //Sacarlo de la lista de awaiting players
-        this._players.push(player);
+        this._players.push(new Player(player));
     }
 
     /**

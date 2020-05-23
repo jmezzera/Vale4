@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FullTableException_1 = require("../Exceptions/FullTableException");
+var Player_1 = require("./Player");
 var Table = /** @class */ (function () {
     function Table(name, playersQty, isProtected, password) {
         if (playersQty === void 0) { playersQty = 2; }
@@ -26,7 +27,7 @@ var Table = /** @class */ (function () {
             throw new Error(); //FIXME: manejar caso borde
         }
         this._awaitingPlayers = this._awaitingPlayers.filter(function (player) { return player.nickname !== nickname; }); //Sacarlo de la lista de awaiting players
-        this._players.push(player);
+        this._players.push(new Player_1.default(player));
     };
     Object.defineProperty(Table.prototype, "id", {
         /**
