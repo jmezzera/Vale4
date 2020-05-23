@@ -133,7 +133,7 @@ var GameControllerImpl = /** @class */ (function () {
                             ? this._tables.get(tableId).players.push(new User_1.default("ppe", "pp"))
                             : "";
                         //Se juegan todas las cartas necesarias para definir ganador de mano
-                        //TO DELETE: Se asigna shift user a efectos prácticos
+                        //TO DELETE: Se asigna shift user y shuffled user a efectos prácticos
                         if (this._tables.get(tableId).shiftUser === undefined ||
                             this._tables.get(tableId).shuffledUser === undefined) {
                             this._tables.get(tableId).shiftUser = this._tables
@@ -141,7 +141,6 @@ var GameControllerImpl = /** @class */ (function () {
                                 .players.filter(function (player) {
                                 return player.nickname === user.nickname;
                             })[0];
-                            //TO DELETE: Se agrega el usuario "repartidor" a quien llama al primer playCard
                             this._tables.get(tableId).shuffledUser = this._tables
                                 .get(tableId)
                                 .players.filter(function (player) {
