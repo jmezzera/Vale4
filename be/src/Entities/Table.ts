@@ -10,6 +10,7 @@ export default class Table {
     private _playersQty: number;
     private _isProtected: boolean;
     private _password: string;
+    private _state: TableSate;
 
     constructor(
         name: string,
@@ -24,6 +25,7 @@ export default class Table {
         this._players = [];
         this._awaitingPlayers = [];
         this._id = (Math.random() * 10000).toString().split(".")[0];
+        this._state = TableSate.AWAITING_PLAYER;
     }
 
     public addPlayer(player: User): void {
@@ -76,4 +78,16 @@ export default class Table {
     public get password(): string {
         return this._password;
     }
+
+    public get state(): TableSate {
+        return this._state;
+    }
 }
+
+enum TableSate {
+    AWAITING_PLAYER,
+    AWAITING_CARD,
+    AWAITING_RESPONSE,
+}
+
+export { TableSate };

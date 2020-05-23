@@ -13,6 +13,7 @@ var Table = /** @class */ (function () {
         this._players = [];
         this._awaitingPlayers = [];
         this._id = (Math.random() * 10000).toString().split(".")[0];
+        this._state = TableSate.AWAITING_PLAYER;
     }
     Table.prototype.addPlayer = function (player) {
         if (this._players.length >= this._playersQty) {
@@ -73,7 +74,21 @@ var Table = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Table.prototype, "state", {
+        get: function () {
+            return this._state;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Table;
 }());
 exports.default = Table;
+var TableSate;
+(function (TableSate) {
+    TableSate[TableSate["AWAITING_PLAYER"] = 0] = "AWAITING_PLAYER";
+    TableSate[TableSate["AWAITING_CARD"] = 1] = "AWAITING_CARD";
+    TableSate[TableSate["AWAITING_RESPONSE"] = 2] = "AWAITING_RESPONSE";
+})(TableSate || (TableSate = {}));
+exports.TableSate = TableSate;
 //# sourceMappingURL=Table.js.map
