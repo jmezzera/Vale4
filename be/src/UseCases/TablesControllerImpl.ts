@@ -7,12 +7,15 @@ import NotFoundException from "../Exceptions/NotFoundException";
 import MissingPasswordException from "../Exceptions/MissingPassword";
 import WrongPasswordException from "../Exceptions/WrongPasswordException";
 import TablesSessions from "../Infra/Web/TablesSessions";
+import GameController from "./GameController";
 
 export default class TablesControllerImpl implements TablesController {
     private tablesDB: TablesDB;
     private _tablesSessionController: TablesSessions;
-    constructor(tablesDB: TablesDB) {
+    private gameController: GameController;
+    constructor(tablesDB: TablesDB, gameController: GameController) {
         this.tablesDB = tablesDB;
+        this.gameController = gameController;
     }
     public async createTable(
         user: User,

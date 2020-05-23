@@ -42,8 +42,9 @@ var NotFoundException_1 = require("../Exceptions/NotFoundException");
 var MissingPassword_1 = require("../Exceptions/MissingPassword");
 var WrongPasswordException_1 = require("../Exceptions/WrongPasswordException");
 var TablesControllerImpl = /** @class */ (function () {
-    function TablesControllerImpl(tablesDB) {
+    function TablesControllerImpl(tablesDB, gameController) {
         this.tablesDB = tablesDB;
+        this.gameController = gameController;
     }
     TablesControllerImpl.prototype.createTable = function (user, tableName, playersQty, isProtected, password) {
         return __awaiter(this, void 0, void 0, function () {
