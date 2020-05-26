@@ -106,6 +106,9 @@ var TablesControllerImpl = /** @class */ (function () {
                     case 1:
                         table = _a.sent();
                         table.connectPlayer(user);
+                        if (table.state === Table_1.TableSate.DEALING) {
+                            this.gameController.dealCards(table);
+                        }
                         return [2 /*return*/];
                 }
             });
