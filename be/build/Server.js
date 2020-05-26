@@ -20,6 +20,7 @@ var Server = /** @class */ (function () {
         });
         this.tablesSessionController = new SocketHandler_1.default(this.webServer.server, this.tablesController, this.usersController);
         this.tablesController.tablesSessionController = this.tablesSessionController;
+        this.gameController.tablesConnection = this.tablesSessionController;
     }
     Server.prototype.run = function () {
         this.webServer.listen(8080);
