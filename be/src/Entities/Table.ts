@@ -1,21 +1,22 @@
 import User from "./User";
 import FullTableException from "../Exceptions/FullTableException";
 import Card from "./Card";
+import Player from "./Player";
 
 export default class Table {
 	private _id: string;
 	private _name: string;
-	private _players: User[];
+	private _players: Player[];
 	private _awaitingPlayers: User[];
-	private _playersQty: number;
+	private _playersQty: 2 | 4 | 6;
 	private _isProtected: boolean;
 	private _password: string;
-	private _cardsInTable: Card[][];
 	private _sampleCardInTable: Card;
 	private _scorerTeam1: number;
 	private _scorerTeam2: number;
 	private _shiftUser: User;
 	private _shuffledUser: User;
+	private _state: TableSate;
 
 	constructor(
 		name: string,
@@ -23,15 +24,19 @@ export default class Table {
 		isProtected: boolean = false,
 		password?: string
 	) {
+		if (playersQty !== 2 && playersQty !== 4 && playersQty !== 6) {
+			throw new Error("Invalid players quantity");
+		}
 		this._name = name;
 		this._playersQty = playersQty;
 		this._isProtected = isProtected;
-		this.scorerTeam1 = 0;
-		this.scorerTeam2 = 0;
 		this._password = password;
 		this._players = [];
 		this._awaitingPlayers = [];
 		this._id = (Math.random() * 10000).toString().split(".")[0];
+		this._state = TableSate.AWAITING_PLAYER;
+		this.scorerTeam1 = 0;
+		this.scorerTeam2 = 0;
 	}
 
 	public addPlayer(player: User): void {
@@ -43,7 +48,6 @@ export default class Table {
 
 	public connectPlayer(player: User): void {
 		const nickname = player.nickname;
-		console.log(player.nickname);
 		let awaitingPlayer = this._awaitingPlayers.find(
 			player => player.nickname === nickname
 		);
@@ -53,7 +57,10 @@ export default class Table {
 		this._awaitingPlayers = this._awaitingPlayers.filter(
 			player => player.nickname !== nickname
 		); //Sacarlo de la lista de awaiting players
-		this._players.push(player);
+		let connectedPlayers = this._players.push(new Player(player));
+		if (connectedPlayers === this._playersQty) {
+			this._state = TableSate.DEALING;
+		}
 	}
 
 	/**
@@ -89,27 +96,11 @@ export default class Table {
 	}
 
 	/**
-	 * Getter cardsInTable
-	 * @return {Card[]}
-	 */
-	public get cardsInTable(): Card[] {
-		return this._cardsInTable;
-	}
-
-	/**
 	 * Getter sampleCardInTable
 	 * @return {Card}
 	 */
 	public get sampleCardInTable(): Card {
 		return this._sampleCardInTable;
-	}
-
-	/**
-	 * Setter cardsInTable
-	 * @param {card[]} value
-	 */
-	public set cardsInTable(value: Card[]) {
-		this._cardsInTable = value;
 	}
 
 	/**
@@ -124,7 +115,7 @@ export default class Table {
 	 * Getter playersQty
 	 * @return {number}
 	 */
-	public get playersQty(): number {
+	public get playersQty(): 2 | 4 | 6 {
 		return this._playersQty;
 	}
 
@@ -177,9 +168,9 @@ export default class Table {
 
 	/**
 	 * Getter players
-	 * @return {User[]}
+	 * @return {Player[]}
 	 */
-	public get players(): User[] {
+	public get players(): Player[] {
 		return this._players;
 	}
 
@@ -198,4 +189,29 @@ export default class Table {
 	public get shuffledUser(): User {
 		return this._shuffledUser;
 	}
+
+	/**
+	 * Getter state
+	 * @return {enum}
+	 */
+	public get state(): TableSate {
+		return this._state;
+	}
+
+	/**
+	 * Setter state
+	 * @param {TableSate} value
+	 */
+	public set state(state: TableSate) {
+		this._state = state;
+	}
 }
+
+enum TableSate {
+	AWAITING_PLAYER,
+	AWAITING_CARD,
+	AWAITING_RESPONSE,
+	DEALING,
+}
+
+export { TableSate };

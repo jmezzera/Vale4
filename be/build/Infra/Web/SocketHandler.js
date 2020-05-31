@@ -43,8 +43,19 @@ var MissingDataException_1 = require("../../Exceptions/MissingDataException");
 //TODO: tipar eventos
 var SocketHandler = /** @class */ (function () {
     function SocketHandler(server, tablesController, gameController, userController) {
+        var _this = this;
+        this.dealCards = function (table, cards) {
+            var clientsOfTable = _this.clients.get(table.id);
+            for (var index = 0; index < table.playersQty; index++) {
+                clientsOfTable[index].emit("cards", {
+                    cards: cards.hands[index],
+                    sampleCard: cards.sampleCard,
+                });
+            }
+        };
         this.io = socketIo(server);
         this.tables = new Map();
+        this.clients = new Map();
         this.tablesController = tablesController;
         this.userController = userController;
         this.gameController = gameController;
@@ -65,8 +76,6 @@ var SocketHandler = /** @class */ (function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            console.log(this);
-                            console.log(this.userController);
                             parsedData = JSON.parse(data);
                             _a.label = 1;
                         case 1:
@@ -74,9 +83,15 @@ var SocketHandler = /** @class */ (function () {
                             return [4 /*yield*/, this.userController.validateToken(parsedData.token)];
                         case 2:
                             user = _a.sent();
-                            console.log(user);
-                            if (user.nickname === parsedData.username)
+                            if (user.nickname === parsedData.username) {
                                 this.tablesController.playerConnected(id, user);
+                                if (this.clients.get(id)) {
+                                    this.clients.get(id).push(socket);
+                                }
+                                else {
+                                    this.clients.set(id, [socket]);
+                                }
+                            }
                             else {
                                 socket.emit("Forbidden");
                                 socket.disconnect();

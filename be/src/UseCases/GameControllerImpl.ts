@@ -4,10 +4,14 @@ import Table from "../Entities/Table";
 import TablesController from "./TablesController";
 import User from "../Entities/User";
 import { getRandomSubarray } from "../Utils/Arrays";
+import EventEmitter from "../Infra/Web/EventEmitter";
+import { TableSate } from "../Entities/Table";
 
 export default class GameControllerImpl implements GameController {
 	private _tableController: TablesController;
 	private _tables: Map<String, Table>;
+	private _tablesConnections: EventEmitter;
+
 	constructor(tableController: TablesController) {
 		this._tableController = tableController;
 		this._tables = new Map<String, Table>();
@@ -199,5 +203,19 @@ export default class GameControllerImpl implements GameController {
 		}
 		const sampleCard = shuffledCards[index];
 		return { hands, sampleCard };
+	}
+
+	public dealCards(table: Table): void {
+		const { hands, sampleCard } = this.shuffleDeck(table.playersQty);
+		for (let index = 0; index < table.playersQty; index++) {
+			table.players[index].dealCards(hands[index]);
+		}
+		table.sampleCardInTable = sampleCard;
+		this._tablesConnections.dealCards(table, { hands, sampleCard });
+		table.state = TableSate.AWAITING_CARD;
+	}
+
+	public set tablesConnection(tablesConnection: EventEmitter) {
+		this._tablesConnections = tablesConnection;
 	}
 }

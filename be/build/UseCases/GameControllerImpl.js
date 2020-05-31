@@ -45,6 +45,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Card_1 = require("../Entities/Card");
 var Arrays_1 = require("../Utils/Arrays");
+var Table_1 = require("../Entities/Table");
 var GameControllerImpl = /** @class */ (function () {
     function GameControllerImpl(tableController) {
         this._tableController = tableController;
@@ -196,6 +197,22 @@ var GameControllerImpl = /** @class */ (function () {
         var sampleCard = shuffledCards[index];
         return { hands: hands, sampleCard: sampleCard };
     };
+    GameControllerImpl.prototype.dealCards = function (table) {
+        var _a = this.shuffleDeck(table.playersQty), hands = _a.hands, sampleCard = _a.sampleCard;
+        for (var index = 0; index < table.playersQty; index++) {
+            table.players[index].dealCards(hands[index]);
+        }
+        table.sampleCardInTable = sampleCard;
+        this._tablesConnections.dealCards(table, { hands: hands, sampleCard: sampleCard });
+        table.state = Table_1.TableSate.AWAITING_CARD;
+    };
+    Object.defineProperty(GameControllerImpl.prototype, "tablesConnection", {
+        set: function (tablesConnection) {
+            this._tablesConnections = tablesConnection;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return GameControllerImpl;
 }());
 exports.default = GameControllerImpl;
