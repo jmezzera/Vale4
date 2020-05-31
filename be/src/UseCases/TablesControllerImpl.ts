@@ -1,18 +1,21 @@
 import TablesController from "./TablesController";
 import User from "../Entities/User";
-import Table from "../Entities/Table";
+import Table, { TableSate } from "../Entities/Table";
 import TablesDB from "../Infra/DB/TablesDB";
 import MissingDataException from "../Exceptions/MissingDataException";
 import NotFoundException from "../Exceptions/NotFoundException";
 import MissingPasswordException from "../Exceptions/MissingPassword";
 import WrongPasswordException from "../Exceptions/WrongPasswordException";
 import TablesSessions from "../Infra/Web/TablesSessions";
+import GameController from "./GameController";
 
 export default class TablesControllerImpl implements TablesController {
     private tablesDB: TablesDB;
     private _tablesSessionController: TablesSessions;
-    constructor(tablesDB: TablesDB) {
+    private gameController: GameController;
+    constructor(tablesDB: TablesDB, gameController: GameController) {
         this.tablesDB = tablesDB;
+        this.gameController = gameController;
     }
     public async createTable(
         user: User,
@@ -58,6 +61,9 @@ export default class TablesControllerImpl implements TablesController {
     public async playerConnected(idTable: string, user: User): Promise<void> {
         let table = await this.tablesDB.getTable(idTable);
         table.connectPlayer(user);
+        if (table.state === TableSate.DEALING) {
+            this.gameController.dealCards(table);
+        }
     }
 
     public set tablesSessionController(sessionController: TablesSessions) {

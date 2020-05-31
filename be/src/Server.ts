@@ -10,18 +10,23 @@ import TablesDBDummy from "./Infra/DB/TablesDBDummy";
 import TablesDB from "./Infra/DB/TablesDB";
 import TablesSessions from "./Infra/Web/TablesSessions";
 import SocketHandler from "./Infra/Web/SocketHandler";
+import GameController from "./UseCases/GameController";
+import GameControllerImpl from "./UseCases/GameControllerImpl";
+import EventEmitter from "./Infra/Web/EventEmitter";
 export default class Server {
     private webServer: WebServer;
     private usersController: UserController;
     private userDB: UsersDB;
+    private gameController: GameController;
     private tablesController: TablesController;
-    private tablesSessionController: TablesSessions;
+    private tablesSessionController: TablesSessions & EventEmitter;
     private tablesDB: TablesDB;
     constructor() {
         this.userDB = new UserDBImpl();
+        this.gameController = new GameControllerImpl();
         this.usersController = new UserControllerImpl(this.userDB);
         this.tablesDB = new TablesDBDummy();
-        this.tablesController = new TablesControllerImpl(this.tablesDB);
+        this.tablesController = new TablesControllerImpl(this.tablesDB, this.gameController);
         this.webServer = new ExpressWebServer({
             tablesController: this.tablesController,
             usersController: this.usersController,
@@ -32,6 +37,7 @@ export default class Server {
             this.usersController
         );
         this.tablesController.tablesSessionController = this.tablesSessionController;
+        this.gameController.tablesConnection = this.tablesSessionController;
     }
     public run() {
         this.webServer.listen(8080);

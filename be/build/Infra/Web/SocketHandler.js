@@ -40,56 +40,68 @@ var socketIo = require("socket.io");
 //TODO: tipar eventos
 var SocketHandler = /** @class */ (function () {
     function SocketHandler(server, tablesController, userController) {
-        this.io = socketIo(server);
-        this.tables = new Map();
-        this.tablesController = tablesController;
-        this.userController = userController;
-        console.trace();
-        console.log("constructor", userController);
-        this.createTable = this.createTable.bind(this);
-    }
-    SocketHandler.prototype.createTable = function (id) {
         var _this = this;
-        if (this.tables.has(id)) {
-            throw new Error("Mesa ya existe");
-        }
-        var tableNamespace = this.io.of(id);
-        this.tables.set(id, tableNamespace);
-        tableNamespace.on("connect", function (socket) {
-            console.log("Conectado a " + id);
-            socket.on("discover", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var parsedData, user, err_1;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            console.log(this);
-                            console.log(this.userController);
-                            parsedData = JSON.parse(data);
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, this.userController.validateToken(parsedData.token)];
-                        case 2:
-                            user = _a.sent();
-                            console.log(user);
-                            if (user.nickname === parsedData.username)
-                                this.tablesController.playerConnected(id, user);
-                            else {
+        this.createTable = function (id) {
+            if (_this.tables.has(id)) {
+                throw new Error("Mesa ya existe");
+            }
+            var tableNamespace = _this.io.of(id);
+            _this.tables.set(id, tableNamespace);
+            tableNamespace.on("connect", function (socket) {
+                console.log("Conectado a " + id);
+                socket.on("discover", function (data) { return __awaiter(_this, void 0, void 0, function () {
+                    var parsedData, user, err_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                parsedData = JSON.parse(data);
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, this.userController.validateToken(parsedData.token)];
+                            case 2:
+                                user = _a.sent();
+                                if (user.nickname === parsedData.username) {
+                                    this.tablesController.playerConnected(id, user);
+                                    if (this.clients.get(id)) {
+                                        this.clients.get(id).push(socket);
+                                    }
+                                    else {
+                                        this.clients.set(id, [socket]);
+                                    }
+                                }
+                                else {
+                                    socket.emit("Forbidden");
+                                    socket.disconnect();
+                                }
+                                return [3 /*break*/, 4];
+                            case 3:
+                                err_1 = _a.sent();
                                 socket.emit("Forbidden");
                                 socket.disconnect();
-                            }
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_1 = _a.sent();
-                            socket.emit("Forbidden");
-                            socket.disconnect();
-                            return [3 /*break*/, 4];
-                        case 4: return [2 /*return*/];
-                    }
+                                return [3 /*break*/, 4];
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                }); });
+            });
+        };
+        this.dealCards = function (table, cards) {
+            var clientsOfTable = _this.clients.get(table.id);
+            for (var index = 0; index < table.playersQty; index++) {
+                clientsOfTable[index].emit("cards", {
+                    cards: cards.hands[index],
+                    sampleCard: cards.sampleCard,
                 });
-            }); });
-        });
-    };
+            }
+        };
+        this.io = socketIo(server);
+        this.tables = new Map();
+        this.clients = new Map();
+        this.tablesController = tablesController;
+        this.userController = userController;
+        this.createTable = this.createTable.bind(this);
+    }
     return SocketHandler;
 }());
 exports.default = SocketHandler;
