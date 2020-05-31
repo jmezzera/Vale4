@@ -21,6 +21,7 @@ export default class Server {
 	private tablesSessionController: TablesSessions;
 	private tablesDB: TablesDB;
 	private gameController: GameController;
+
 	constructor() {
 		this.userDB = new UserDBImpl();
 		this.usersController = new UserControllerImpl(this.userDB);
@@ -35,7 +36,8 @@ export default class Server {
 		this.tablesSessionController = new SocketHandler(
 			this.webServer.server,
 			this.tablesController,
-			this.gameController
+			this.gameController,
+			this.usersController
 		);
 		this.tablesController.tablesSessionController = this.tablesSessionController;
 	}

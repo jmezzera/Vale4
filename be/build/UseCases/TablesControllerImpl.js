@@ -69,11 +69,7 @@ var TablesControllerImpl = /** @class */ (function () {
         });
     };
     TablesControllerImpl.prototype.getTables = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.tablesDB.getTables()];
-            });
-        });
+        return this.tablesDB.getTables();
     };
     TablesControllerImpl.prototype.joinTable = function (idTable, user, password) {
         return __awaiter(this, void 0, void 0, function () {

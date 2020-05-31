@@ -10,6 +10,9 @@ var UserControllerImpl = /** @class */ (function () {
     UserControllerImpl.prototype.registry = function (user) {
         return this._usersDB.addUser(user);
     };
+    UserControllerImpl.prototype.validateToken = function (token) {
+        return this._usersDB.validateToken(token);
+    };
     return UserControllerImpl;
 }());
 exports.default = UserControllerImpl;

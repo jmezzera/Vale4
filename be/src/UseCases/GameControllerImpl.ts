@@ -3,6 +3,7 @@ import Card, { Suit } from "../Entities/Card";
 import Table from "../Entities/Table";
 import TablesController from "./TablesController";
 import User from "../Entities/User";
+import { getRandomSubarray } from "../Utils/Arrays";
 
 export default class GameControllerImpl implements GameController {
 	private _tableController: TablesController;
@@ -35,7 +36,7 @@ export default class GameControllerImpl implements GameController {
 		return winnerPlayerIndex;
 	}
 
-	private cambiarTurno(tableId: String, winnerPlayerIndex: number) {
+	private changeShift(tableId: String, winnerPlayerIndex: number) {
 		let currentHand = this._tables.get(tableId).shiftUser;
 		let indexCurrentHand = this._tables
 			.get(tableId)
@@ -96,38 +97,33 @@ export default class GameControllerImpl implements GameController {
 		let searchTable: Table;
 		if (this._tables.get(tableId) === undefined) {
 			let _createdTables: Table[] = await this._tableController.getTables();
-			_createdTables.filter((table) => {
+			_createdTables.filter(table => {
 				return table.id === tableId;
 			});
 			_createdTables[0].sampleCardInTable = new Card(Suit.Oro, 2);
 			this._tables.set(tableId, _createdTables[0]);
 		}
-		//TO DELETE: usuario agregado en forma provisoria
-		this._tables.get(tableId).players.length <
-		this._tables.get(tableId).playersQty
-			? this._tables.get(tableId).players.push(new User("ppe", "pp"))
-			: "";
 
 		//Se juegan todas las cartas necesarias para definir ganador de mano
 
 		//TO DELETE: Se asigna shift user y shuffled user a efectos prácticos
-		if (
+		/*if (
 			this._tables.get(tableId).shiftUser === undefined ||
 			this._tables.get(tableId).shuffledUser === undefined
 		) {
 			this._tables.get(tableId).shiftUser = this._tables
 				.get(tableId)
-				.players.filter((player) => {
+				.players.filter(player => {
 					return player.nickname === user.nickname;
 				})[0];
 
 			this._tables.get(tableId).shuffledUser = this._tables
 				.get(tableId)
-				.players.filter((player) => {
+				.players.filter(player => {
 					return player.nickname === user.nickname;
 				})[0];
 		}
-
+*/
 		let currentHand = this._tables.get(tableId).shiftUser;
 		let indexCurrentHand = this._tables
 			.get(tableId)
@@ -156,16 +152,16 @@ export default class GameControllerImpl implements GameController {
 				searchTable.sampleCardInTable
 			);
 			if (winnerPlayerIndex < searchTable.playersQty / 2) {
-				this._tables.get(tableId).tanteadorEquipo1++;
+				this._tables.get(tableId).scorerTeam1++;
 			} else {
-				this._tables.get(tableId).tanteadorEquipo2++;
+				this._tables.get(tableId).scorerTeam2++;
 			}
-			this.cambiarTurno(tableId, winnerPlayerIndex);
+			this.changeShift(tableId, winnerPlayerIndex);
 
 			this._tables.get(tableId).cardsInTable = [];
 			return true;
 		} else {
-			this.cambiarTurno(tableId, null);
+			this.changeShift(tableId, null);
 			return false;
 		}
 	}
@@ -183,5 +179,25 @@ export default class GameControllerImpl implements GameController {
 	 */
 	public get tables(): Map<String, Table> {
 		return this._tables;
+	}
+
+	public shuffleDeck(
+		numplayers: 2 | 4 | 6
+	): { hands: [Card, Card, Card][]; sampleCard: Card } {
+		const allCards = Card.getAllCards();
+		const cardQty = 3 * numplayers + 1;
+		const shuffledCards = getRandomSubarray(allCards, cardQty);
+		let hands: [Card, Card, Card][] = [];
+		let index = 0;
+		for (let player = 0; player < numplayers; player++) {
+			hands.push([
+				shuffledCards[index],
+				shuffledCards[index + 1],
+				shuffledCards[index + 2],
+			]);
+			index += 3;
+		}
+		const sampleCard = shuffledCards[index];
+		return { hands, sampleCard };
 	}
 }

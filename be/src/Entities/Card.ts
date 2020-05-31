@@ -16,6 +16,16 @@ export default class Card {
 		new Card(Suit.Oro, 7),
 	];
 	public static normalCards = [3, 2, 1, 12, 11, 10, 7, 6, 5, 4];
+	public static getAllCards = () => {
+		let allCards: Card[] = [];
+		const suits = [Suit.Copa, Suit.Basto, Suit.Espada, Suit.Oro];
+		for (let suit of suits) {
+			for (let number of [1, 2, 3, 4, 5, 6, 7, 10, 11, 12]) {
+				allCards.push(new Card(suit, number));
+			}
+		}
+		return allCards;
+	};
 
 	constructor(suit: Suit, number: number) {
 		this._suit = suit;
@@ -94,6 +104,27 @@ export default class Card {
 			//Alcahuete
 			return true;
 		return false; //Otro caso
+	}
+
+	public getPoints(sampleCard: Card): number {
+		if (!this.isPieza(sampleCard)) {
+			if (this.number >= 10) {
+				return 0;
+			} else {
+				return this.number;
+			}
+		} else {
+			let _this: Card = this;
+			if (this.number === 12) {
+				_this = sampleCard;
+			}
+			let index = Card.piezas.indexOf(_this.number);
+			if (index <= 3) {
+				return 10 - index;
+			} else {
+				return 7;
+			}
+		}
 	}
 
 	/**

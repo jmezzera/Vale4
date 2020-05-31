@@ -13,6 +13,8 @@ import UsersAPI from "./UsersAPI";
 import TablesAPI from "./TablesAPI";
 import TablesController from "../../UseCases/TablesController";
 import GameController from "../../UseCases/GameController";
+import UsersMWs from "./MiddleWare/Users";
+import TablesSessions from "./TablesSessions";
 
 export default class ExpressWebServer implements WebServer {
 	private _server: http.Server;
@@ -21,6 +23,8 @@ export default class ExpressWebServer implements WebServer {
 	private usersAPI: UsersAPI;
 	private statusAPI: StatusAPI;
 	private tablesAPI: TablesAPI;
+
+	private usersMiddleWare: UsersMWs;
 
 	constructor(controllers: {
 		tablesController: TablesController;
@@ -36,19 +40,25 @@ export default class ExpressWebServer implements WebServer {
 		this.app.use(cors());
 		this.app.use(express.json());
 
+		this.usersMiddleWare = new UsersMWs(controllers.usersController);
+
 		this.usersAPI = new UsersAPI(controllers.usersController);
 		this.app.use("/users", this.usersAPI.router);
 
 		this.statusAPI = new StatusAPI();
 		this.app.use("/status", this.statusAPI.router);
 
-		this.tablesAPI = new TablesAPI(controllers.tablesController);
+		this.tablesAPI = new TablesAPI(
+			controllers.tablesController,
+			this.usersMiddleWare
+		);
 		this.app.use("/tables", this.tablesAPI.router);
 
 		this.socketHandler = new SocketHandler(
 			this._server,
 			controllers.tablesController,
-			controllers.gameController
+			controllers.gameController,
+			controllers.usersController
 		);
 
 		this.statusAPI = new StatusAPI();
@@ -65,7 +75,7 @@ export default class ExpressWebServer implements WebServer {
 		mongoose
 			.connect(db)
 			.then(() => console.log("MongoDB connect succesful"))
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	}
 	public listen(port: number) {
 		this.server.listen(port, () => {

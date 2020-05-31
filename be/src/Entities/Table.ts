@@ -12,8 +12,8 @@ export default class Table {
 	private _password: string;
 	private _cardsInTable: Card[][];
 	private _sampleCardInTable: Card;
-	private _tanteadorEquipo1: number;
-	private _tanteadorEquipo2: number;
+	private _scorerTeam1: number;
+	private _scorerTeam2: number;
 	private _shiftUser: User;
 	private _shuffledUser: User;
 
@@ -26,8 +26,8 @@ export default class Table {
 		this._name = name;
 		this._playersQty = playersQty;
 		this._isProtected = isProtected;
-		this.tanteadorEquipo1 = 0;
-		this.tanteadorEquipo2 = 0;
+		this.scorerTeam1 = 0;
+		this.scorerTeam2 = 0;
 		this._password = password;
 		this._players = [];
 		this._awaitingPlayers = [];
@@ -45,13 +45,13 @@ export default class Table {
 		const nickname = player.nickname;
 		console.log(player.nickname);
 		let awaitingPlayer = this._awaitingPlayers.find(
-			(player) => player.nickname === nickname
+			player => player.nickname === nickname
 		);
 		if (!awaitingPlayer) {
 			throw new Error(); //FIXME: manejar caso borde
 		}
 		this._awaitingPlayers = this._awaitingPlayers.filter(
-			(player) => player.nickname !== nickname
+			player => player.nickname !== nickname
 		); //Sacarlo de la lista de awaiting players
 		this._players.push(player);
 	}
@@ -129,35 +129,35 @@ export default class Table {
 	}
 
 	/**
-	 * Getter tanteadorEquipo1
+	 * Getter scorerTeam1
 	 * @return {number}
 	 */
-	public get tanteadorEquipo1(): number {
-		return this._tanteadorEquipo1;
+	public get scorerTeam1(): number {
+		return this._scorerTeam1;
 	}
 
 	/**
-	 * Getter tanteadorEquipo2
+	 * Getter scorerTeam2
 	 * @return {number}
 	 */
-	public get tanteadorEquipo2(): number {
-		return this._tanteadorEquipo2;
+	public get scorerTeam2(): number {
+		return this._scorerTeam2;
 	}
 
 	/**
-	 * Setter tanteadorEquipo2
+	 * Setter scorerTeam2
 	 * @param {number} value
 	 */
-	public set tanteadorEquipo2(value: number) {
-		this._tanteadorEquipo2 = value;
+	public set scorerTeam2(value: number) {
+		this._scorerTeam2 = value;
 	}
 
 	/**
-	 * Setter tanteadorEquipo1
+	 * Setter scorerTeam1
 	 * @param {number} value
 	 */
-	public set tanteadorEquipo1(value: number) {
-		this._tanteadorEquipo1 = value;
+	public set scorerTeam1(value: number) {
+		this._scorerTeam1 = value;
 	}
 	/**
 	 * Getter shiftUser

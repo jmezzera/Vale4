@@ -134,3 +134,25 @@ describe("Test comparación", () => {
         ).to.equal(0);
     });
 });
+
+describe("Test puntos", () => {
+    it("Negras", () => {
+        expect(new Card(Suit.Basto, 10).getPoints(new Card(Suit.Espada, 4))).to.equal(0);
+        expect(new Card(Suit.Basto, 11).getPoints(new Card(Suit.Espada, 4))).to.equal(0);
+        expect(new Card(Suit.Copa, 12).getPoints(new Card(Suit.Espada, 4))).to.equal(0);
+        expect(new Card(Suit.Espada, 12).getPoints(new Card(Suit.Espada, 3))).to.equal(0);
+    });
+    it("Blancas", () => {
+        expect(new Card(Suit.Basto, 7).getPoints(new Card(Suit.Espada, 4))).to.equal(7);
+        expect(new Card(Suit.Basto, 6).getPoints(new Card(Suit.Espada, 4))).to.equal(6);
+        expect(new Card(Suit.Copa, 4).getPoints(new Card(Suit.Espada, 4))).to.equal(4);
+        expect(new Card(Suit.Espada, 7).getPoints(new Card(Suit.Espada, 3))).to.equal(7);
+    });
+    it("Piezas", () => {
+        expect(new Card(Suit.Basto, 2).getPoints(new Card(Suit.Basto, 4))).to.equal(10);
+        expect(new Card(Suit.Basto, 4).getPoints(new Card(Suit.Basto, 3))).to.equal(9);
+        expect(new Card(Suit.Copa, 12).getPoints(new Card(Suit.Copa, 4))).to.equal(9);
+        expect(new Card(Suit.Espada, 10).getPoints(new Card(Suit.Espada, 3))).to.equal(7);
+        expect(new Card(Suit.Espada, 11).getPoints(new Card(Suit.Espada, 3))).to.equal(7);
+    });
+});

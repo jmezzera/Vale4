@@ -44,7 +44,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Card_1 = require("../Entities/Card");
-var User_1 = require("../Entities/User");
+var Arrays_1 = require("../Utils/Arrays");
 var GameControllerImpl = /** @class */ (function () {
     function GameControllerImpl(tableController) {
         this._tableController = tableController;
@@ -65,7 +65,7 @@ var GameControllerImpl = /** @class */ (function () {
         winnerPlayerIndex = auxCardsInGame.indexOf(orderArray[orderArray.length - 1]);
         return winnerPlayerIndex;
     };
-    GameControllerImpl.prototype.cambiarTurno = function (tableId, winnerPlayerIndex) {
+    GameControllerImpl.prototype.changeShift = function (tableId, winnerPlayerIndex) {
         var currentHand = this._tables.get(tableId).shiftUser;
         var indexCurrentHand = this._tables
             .get(tableId)
@@ -127,26 +127,6 @@ var GameControllerImpl = /** @class */ (function () {
                         this._tables.set(tableId, _createdTables[0]);
                         _a.label = 2;
                     case 2:
-                        //TO DELETE: usuario agregado en forma provisoria
-                        this._tables.get(tableId).players.length <
-                            this._tables.get(tableId).playersQty
-                            ? this._tables.get(tableId).players.push(new User_1.default("ppe", "pp"))
-                            : "";
-                        //Se juegan todas las cartas necesarias para definir ganador de mano
-                        //TO DELETE: Se asigna shift user y shuffled user a efectos prácticos
-                        if (this._tables.get(tableId).shiftUser === undefined ||
-                            this._tables.get(tableId).shuffledUser === undefined) {
-                            this._tables.get(tableId).shiftUser = this._tables
-                                .get(tableId)
-                                .players.filter(function (player) {
-                                return player.nickname === user.nickname;
-                            })[0];
-                            this._tables.get(tableId).shuffledUser = this._tables
-                                .get(tableId)
-                                .players.filter(function (player) {
-                                return player.nickname === user.nickname;
-                            })[0];
-                        }
                         currentHand = this._tables.get(tableId).shiftUser;
                         indexCurrentHand = this._tables
                             .get(tableId)
@@ -163,17 +143,17 @@ var GameControllerImpl = /** @class */ (function () {
                             searchTable.cardsInTable.length == numberOfPlayers) {
                             winnerPlayerIndex = this.compareCardsInTable(tableId.toString(), searchTable.cardsInTable, searchTable.sampleCardInTable);
                             if (winnerPlayerIndex < searchTable.playersQty / 2) {
-                                this._tables.get(tableId).tanteadorEquipo1++;
+                                this._tables.get(tableId).scorerTeam1++;
                             }
                             else {
-                                this._tables.get(tableId).tanteadorEquipo2++;
+                                this._tables.get(tableId).scorerTeam2++;
                             }
-                            this.cambiarTurno(tableId, winnerPlayerIndex);
+                            this.changeShift(tableId, winnerPlayerIndex);
                             this._tables.get(tableId).cardsInTable = [];
                             return [2 /*return*/, true];
                         }
                         else {
-                            this.cambiarTurno(tableId, null);
+                            this.changeShift(tableId, null);
                             return [2 /*return*/, false];
                         }
                         return [2 /*return*/];
@@ -199,6 +179,23 @@ var GameControllerImpl = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    GameControllerImpl.prototype.shuffleDeck = function (numplayers) {
+        var allCards = Card_1.default.getAllCards();
+        var cardQty = 3 * numplayers + 1;
+        var shuffledCards = Arrays_1.getRandomSubarray(allCards, cardQty);
+        var hands = [];
+        var index = 0;
+        for (var player = 0; player < numplayers; player++) {
+            hands.push([
+                shuffledCards[index],
+                shuffledCards[index + 1],
+                shuffledCards[index + 2],
+            ]);
+            index += 3;
+        }
+        var sampleCard = shuffledCards[index];
+        return { hands: hands, sampleCard: sampleCard };
+    };
     return GameControllerImpl;
 }());
 exports.default = GameControllerImpl;

@@ -19,7 +19,7 @@ var Server = /** @class */ (function () {
             usersController: this.usersController,
             gameController: this.gameController,
         });
-        this.tablesSessionController = new SocketHandler_1.default(this.webServer.server, this.tablesController, this.gameController);
+        this.tablesSessionController = new SocketHandler_1.default(this.webServer.server, this.tablesController, this.gameController, this.usersController);
         this.tablesController.tablesSessionController = this.tablesSessionController;
     }
     Server.prototype.run = function () {

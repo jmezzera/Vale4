@@ -8,8 +8,8 @@ var Table = /** @class */ (function () {
         this._name = name;
         this._playersQty = playersQty;
         this._isProtected = isProtected;
-        this.tanteadorEquipo1 = 0;
-        this.tanteadorEquipo2 = 0;
+        this.scorerTeam1 = 0;
+        this.scorerTeam2 = 0;
         this._password = password;
         this._players = [];
         this._awaitingPlayers = [];
@@ -122,38 +122,38 @@ var Table = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Table.prototype, "tanteadorEquipo1", {
+    Object.defineProperty(Table.prototype, "scorerTeam1", {
         /**
-         * Getter tanteadorEquipo1
+         * Getter scorerTeam1
          * @return {number}
          */
         get: function () {
-            return this._tanteadorEquipo1;
+            return this._scorerTeam1;
         },
         /**
-         * Setter tanteadorEquipo1
+         * Setter scorerTeam1
          * @param {number} value
          */
         set: function (value) {
-            this._tanteadorEquipo1 = value;
+            this._scorerTeam1 = value;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Table.prototype, "tanteadorEquipo2", {
+    Object.defineProperty(Table.prototype, "scorerTeam2", {
         /**
-         * Getter tanteadorEquipo2
+         * Getter scorerTeam2
          * @return {number}
          */
         get: function () {
-            return this._tanteadorEquipo2;
+            return this._scorerTeam2;
         },
         /**
-         * Setter tanteadorEquipo2
+         * Setter scorerTeam2
          * @param {number} value
          */
         set: function (value) {
-            this._tanteadorEquipo2 = value;
+            this._scorerTeam2 = value;
         },
         enumerable: true,
         configurable: true

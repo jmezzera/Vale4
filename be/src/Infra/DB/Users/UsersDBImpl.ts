@@ -7,12 +7,12 @@ import * as jwt from "jsonwebtoken";
 import * as keys from "../../../../config/key";
 
 export default class UserDBImpl implements UsersDB {
-	private getToken(name: string, _id: string): string {
+	private getToken(nickname: string, _id: string): string {
 		return (
 			"Bearer " +
 			jwt.sign(
 				{
-					name: name,
+					nickname: nickname,
 					id: _id,
 				},
 				keys.secretOrKey
@@ -70,5 +70,36 @@ export default class UserDBImpl implements UsersDB {
 		} catch (err) {
 			throw new Error(err.message);
 		}
+	}
+
+	async validateToken(token: string): Promise<User> {
+		const decoded = await this.decodeToken(token);
+		const user = await UserModel.findById(decoded.id);
+		return new User(
+			user.nickname,
+			user.email,
+			null,
+			null,
+			user.name,
+			user.surname
+		);
+	}
+
+	private decodeToken(
+		token: string
+	): Promise<{ nickname: string; id: string }> {
+		return new Promise((resolve, reject) => {
+			jwt.verify(
+				token,
+				keys.secretOrKey,
+				(err: any, decoded: { nickname: string; id: string }) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+					resolve(decoded);
+				}
+			);
+		});
 	}
 }
