@@ -82,6 +82,24 @@ var Table = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Table.prototype, "cardsInTable", {
+        /**
+         * Getter cardsInTable
+         * @return {Card}
+         */
+        get: function () {
+            return this._cardsInTable;
+        },
+        /**
+         * Setter cardsInTable
+         * @param {card} value
+         */
+        set: function (value) {
+            this._cardsInTable = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Table.prototype, "sampleCardInTable", {
         /**
          * Getter sampleCardInTable

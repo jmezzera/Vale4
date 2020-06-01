@@ -8,12 +8,10 @@ import EventEmitter from "../Infra/Web/EventEmitter";
 import { TableSate } from "../Entities/Table";
 
 export default class GameControllerImpl implements GameController {
-	private _tableController: TablesController;
 	private _tables: Map<String, Table>;
 	private _tablesConnections: EventEmitter;
 
-	constructor(tableController: TablesController) {
-		this._tableController = tableController;
+	constructor() {
 		this._tables = new Map<String, Table>();
 	}
 
@@ -42,10 +40,13 @@ export default class GameControllerImpl implements GameController {
 
 	private changeShift(tableId: String, winnerPlayerIndex: number) {
 		let currentHand = this._tables.get(tableId).shiftUser;
+
+		let auxArray = this._tables.get(tableId).players.filter(player => {
+			if (player.nickname === currentHand.nickname) return player;
+		});
 		let indexCurrentHand = this._tables
 			.get(tableId)
-			.players.indexOf(currentHand);
-
+			.players.indexOf(auxArray[0]);
 		/*console.log("MOVE SAMPLE-->", moveSample);
 		if (moveSample) {
 			if (
@@ -99,6 +100,7 @@ export default class GameControllerImpl implements GameController {
 		user: User
 	): Promise<boolean> {
 		let searchTable: Table;
+		/*
 		if (this._tables.get(tableId) === undefined) {
 			let _createdTables: Table[] = await this._tableController.getTables();
 			_createdTables.filter(table => {
@@ -111,7 +113,7 @@ export default class GameControllerImpl implements GameController {
 		//Se juegan todas las cartas necesarias para definir ganador de mano
 
 		//TO DELETE: Se asigna shift user y shuffled user a efectos prácticos
-		/*if (
+		if (
 			this._tables.get(tableId).shiftUser === undefined ||
 			this._tables.get(tableId).shuffledUser === undefined
 		) {
@@ -129,9 +131,13 @@ export default class GameControllerImpl implements GameController {
 		}
 */
 		let currentHand = this._tables.get(tableId).shiftUser;
+
+		let auxArray = this._tables.get(tableId).players.filter(player => {
+			if (player.nickname === currentHand.nickname) return player;
+		});
 		let indexCurrentHand = this._tables
 			.get(tableId)
-			.players.indexOf(currentHand);
+			.players.indexOf(auxArray[0]);
 
 		if (this._tables.get(tableId).cardsInTable === undefined) {
 			this._tables.get(tableId).cardsInTable = new Array<Card>();
@@ -206,6 +212,17 @@ export default class GameControllerImpl implements GameController {
 	}
 
 	public dealCards(table: Table): void {
+		//Se define como mano y repartidor al primer usuario que entró (podría ser random)
+		let shuffledUser: User = new User(
+			table.players[0].nickname,
+			table.players[0].email
+		);
+		let shiftUser: User = new User(
+			table.players[0].nickname,
+			table.players[0].email
+		);
+		table.shuffledUser = shuffledUser;
+		table.shiftUser = shiftUser;
 		const { hands, sampleCard } = this.shuffleDeck(table.playersQty);
 		for (let index = 0; index < table.playersQty; index++) {
 			table.players[index].dealCards(hands[index]);

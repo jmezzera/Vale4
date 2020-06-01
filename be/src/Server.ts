@@ -27,7 +27,7 @@ export default class Server {
 		this.userDB = new UserDBImpl();
 		this.usersController = new UserControllerImpl(this.userDB);
 		this.tablesDB = new TablesDBDummy();
-		this.gameController = new GameControllerImpl(this.tablesController);
+		this.gameController = new GameControllerImpl();
 		this.tablesController = new TablesControllerImpl(
 			this.tablesDB,
 			this.gameController

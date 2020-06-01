@@ -64,6 +64,7 @@ var TablesControllerImpl = /** @class */ (function () {
                     case 1:
                         tableWithDBId = _a.sent();
                         this._tablesSessionController.createTable(tableWithDBId.id);
+                        this.gameController.tables.set(tableWithDBId.id, table);
                         return [2 /*return*/, tableWithDBId];
                 }
             });

@@ -12,7 +12,7 @@ var Server = /** @class */ (function () {
         this.userDB = new UsersDBImpl_1.default();
         this.usersController = new UserControllerImpl_1.default(this.userDB);
         this.tablesDB = new TablesDBDummy_1.default();
-        this.gameController = new GameControllerImpl_1.default(this.tablesController);
+        this.gameController = new GameControllerImpl_1.default();
         this.tablesController = new TablesControllerImpl_1.default(this.tablesDB, this.gameController);
         this.webServer = new ExpressWebServer_1.default({
             tablesController: this.tablesController,

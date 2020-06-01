@@ -17,6 +17,7 @@ export default class Table {
 	private _shiftUser: User;
 	private _shuffledUser: User;
 	private _state: TableSate;
+	private _cardsInTable: Card[];
 
 	constructor(
 		name: string,
@@ -93,6 +94,22 @@ export default class Table {
 	 */
 	public get password(): string {
 		return this._password;
+	}
+
+	/**
+	 * Getter cardsInTable
+	 * @return {Card}
+	 */
+	public get cardsInTable(): Card[] {
+		return this._cardsInTable;
+	}
+
+	/**
+	 * Setter cardsInTable
+	 * @param {card} value
+	 */
+	public set cardsInTable(value: Card[]) {
+		this._cardsInTable = value;
 	}
 
 	/**

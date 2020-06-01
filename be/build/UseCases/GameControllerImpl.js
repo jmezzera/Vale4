@@ -44,11 +44,11 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Card_1 = require("../Entities/Card");
+var User_1 = require("../Entities/User");
 var Arrays_1 = require("../Utils/Arrays");
 var Table_1 = require("../Entities/Table");
 var GameControllerImpl = /** @class */ (function () {
-    function GameControllerImpl(tableController) {
-        this._tableController = tableController;
+    function GameControllerImpl() {
         this._tables = new Map();
     }
     /**
@@ -68,9 +68,13 @@ var GameControllerImpl = /** @class */ (function () {
     };
     GameControllerImpl.prototype.changeShift = function (tableId, winnerPlayerIndex) {
         var currentHand = this._tables.get(tableId).shiftUser;
+        var auxArray = this._tables.get(tableId).players.filter(function (player) {
+            if (player.nickname === currentHand.nickname)
+                return player;
+        });
         var indexCurrentHand = this._tables
             .get(tableId)
-            .players.indexOf(currentHand);
+            .players.indexOf(auxArray[0]);
         /*console.log("MOVE SAMPLE-->", moveSample);
         if (moveSample) {
             if (
@@ -113,7 +117,7 @@ var GameControllerImpl = /** @class */ (function () {
      */
     GameControllerImpl.prototype.takeGameDecision = function (data, tableId, user) {
         return __awaiter(this, void 0, void 0, function () {
-            var searchTable, _createdTables, currentHand, indexCurrentHand, numberOfPlayers, winnerPlayerIndex;
+            var searchTable, _createdTables, currentHand, auxArray, indexCurrentHand, numberOfPlayers, winnerPlayerIndex;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -129,9 +133,13 @@ var GameControllerImpl = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         currentHand = this._tables.get(tableId).shiftUser;
+                        auxArray = this._tables.get(tableId).players.filter(function (player) {
+                            if (player.nickname === currentHand.nickname)
+                                return player;
+                        });
                         indexCurrentHand = this._tables
                             .get(tableId)
-                            .players.indexOf(currentHand);
+                            .players.indexOf(auxArray[0]);
                         if (this._tables.get(tableId).cardsInTable === undefined) {
                             this._tables.get(tableId).cardsInTable = new Array();
                         }
@@ -198,6 +206,11 @@ var GameControllerImpl = /** @class */ (function () {
         return { hands: hands, sampleCard: sampleCard };
     };
     GameControllerImpl.prototype.dealCards = function (table) {
+        //Se define como mano y repartidor al primer usuario que entró (podría ser random)
+        var shuffledUser = new User_1.default(table.players[0].nickname, table.players[0].email);
+        var shiftUser = new User_1.default(table.players[0].nickname, table.players[0].email);
+        table.shuffledUser = shuffledUser;
+        table.shiftUser = shiftUser;
         var _a = this.shuffleDeck(table.playersQty), hands = _a.hands, sampleCard = _a.sampleCard;
         for (var index = 0; index < table.playersQty; index++) {
             table.players[index].dealCards(hands[index]);
