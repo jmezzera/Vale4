@@ -28,6 +28,9 @@ var Player = /** @class */ (function (_super) {
         get: function () {
             return this._cards;
         },
+        set: function (value) {
+            this._cards = value;
+        },
         enumerable: true,
         configurable: true
     });

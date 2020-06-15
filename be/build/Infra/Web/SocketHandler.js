@@ -107,31 +107,37 @@ var SocketHandler = /** @class */ (function () {
                 });
             }); });
             socket.on("playCard", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var parsedData, card, deleteCardsOnTable;
+                var parsedData, card, gameDecisionResponse;
                 return __generator(this, function (_a) {
-                    parsedData = JSON.parse(data);
-                    switch (parsedData.suit) {
-                        case "Oro":
-                            card = new Card_1.default(Card_1.Suit.Oro, parsedData.number);
-                            break;
-                        case "Basto":
-                            card = new Card_1.default(Card_1.Suit.Basto, parsedData.number);
-                            break;
-                        case "Espada":
-                            card = new Card_1.default(Card_1.Suit.Espada, parsedData.number);
-                            break;
-                        case "Copa":
-                            card = new Card_1.default(Card_1.Suit.Copa, parsedData.number);
-                            break;
-                        default:
-                            throw new MissingDataException_1.default("Suit parameter is missing.");
+                    switch (_a.label) {
+                        case 0:
+                            parsedData = JSON.parse(data);
+                            switch (parsedData.suit) {
+                                case "Oro":
+                                    card = new Card_1.default(Card_1.Suit.Oro, parsedData.number);
+                                    break;
+                                case "Basto":
+                                    card = new Card_1.default(Card_1.Suit.Basto, parsedData.number);
+                                    break;
+                                case "Espada":
+                                    card = new Card_1.default(Card_1.Suit.Espada, parsedData.number);
+                                    break;
+                                case "Copa":
+                                    card = new Card_1.default(Card_1.Suit.Copa, parsedData.number);
+                                    break;
+                                default:
+                                    throw new MissingDataException_1.default("Suit parameter is missing.");
+                            }
+                            this.io.sockets.to(id).emit("cardPlayed", card);
+                            return [4 /*yield*/, this.gameController.takeGameDecision(card, id, new User_1.default(parsedData.nickname, parsedData.email))];
+                        case 1:
+                            gameDecisionResponse = _a.sent();
+                            if (gameDecisionResponse.needShuffle) {
+                                this.io.sockets.emit("deleteCards", null);
+                                // ver de llamar al repartir y manejo del usuario mano devuelto por el servicio
+                            }
+                            return [2 /*return*/];
                     }
-                    this.io.sockets.to(id).emit("cartaJugada", card);
-                    deleteCardsOnTable = this.gameController.takeGameDecision(card, id, new User_1.default(parsedData.nickname, parsedData.email));
-                    if (deleteCardsOnTable) {
-                        this.io.sockets.emit("deleteCards", null);
-                    }
-                    return [2 /*return*/];
                 });
             }); });
         });

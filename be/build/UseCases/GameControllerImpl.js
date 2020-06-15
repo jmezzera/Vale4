@@ -47,6 +47,7 @@ var Card_1 = require("../Entities/Card");
 var User_1 = require("../Entities/User");
 var Arrays_1 = require("../Utils/Arrays");
 var Table_1 = require("../Entities/Table");
+var HandResult_1 = require("../Entities/HandResult");
 var GameControllerImpl = /** @class */ (function () {
     function GameControllerImpl() {
         this._tables = new Map();
@@ -57,7 +58,7 @@ var GameControllerImpl = /** @class */ (function () {
      *          1 si gana una carta del equipo 1
      *          0 si gana una carta del equipo 2
      */
-    GameControllerImpl.prototype.compareCardsInTable = function (tableId, cardsInGame, sampleCardInGame) {
+    GameControllerImpl.prototype.compareCardsInGame = function (cardsInGame, sampleCardInGame) {
         var winnerPlayerIndex;
         var auxCardsInGame = __spreadArrays(cardsInGame);
         var orderArray = cardsInGame.sort(function (cardA, cardB) {
@@ -66,48 +67,58 @@ var GameControllerImpl = /** @class */ (function () {
         winnerPlayerIndex = auxCardsInGame.indexOf(orderArray[orderArray.length - 1]);
         return winnerPlayerIndex;
     };
-    GameControllerImpl.prototype.changeShift = function (tableId, winnerPlayerIndex) {
-        var currentHand = this._tables.get(tableId).shiftUser;
-        var auxArray = this._tables.get(tableId).players.filter(function (player) {
-            if (player.nickname === currentHand.nickname)
-                return player;
+    GameControllerImpl.prototype.changeShift = function (tableId, winnerPlayerIndex, moveSample) {
+        return __awaiter(this, void 0, void 0, function () {
+            var currentHand, currentShuffler, auxArrayCurrentHand, auxArrayCurrentShuffler, indexCurrentHand, indexCurrentShuffler;
+            return __generator(this, function (_a) {
+                currentHand = this._tables.get(tableId).shiftUser;
+                currentShuffler = this._tables.get(tableId).shiftUser;
+                auxArrayCurrentHand = this._tables
+                    .get(tableId)
+                    .players.filter(function (player) {
+                    if (player.nickname === currentHand.nickname)
+                        return player;
+                });
+                auxArrayCurrentShuffler = this._tables
+                    .get(tableId)
+                    .players.filter(function (player) {
+                    if (player.nickname === currentShuffler.nickname)
+                        return player;
+                });
+                indexCurrentHand = this._tables
+                    .get(tableId)
+                    .players.indexOf(auxArrayCurrentHand[0]);
+                indexCurrentShuffler = this._tables
+                    .get(tableId)
+                    .players.indexOf(auxArrayCurrentShuffler[0]);
+                if (moveSample) {
+                    if (indexCurrentShuffler + 1 ==
+                        this._tables.get(tableId).players.length) {
+                        this._tables.get(tableId).shuffledUser = this._tables.get(tableId).players[0];
+                        this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[0];
+                    }
+                    else {
+                        this._tables.get(tableId).shuffledUser = this._tables.get(tableId).players[indexCurrentShuffler + 1];
+                        this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[indexCurrentShuffler + 1];
+                    }
+                }
+                else {
+                    if (winnerPlayerIndex != null) {
+                        this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[winnerPlayerIndex];
+                    }
+                    else {
+                        if (indexCurrentHand + 1 ==
+                            this._tables.get(tableId).players.length) {
+                            this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[0];
+                        }
+                        else {
+                            this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[indexCurrentHand + 1];
+                        }
+                    }
+                }
+                return [2 /*return*/];
+            });
         });
-        var indexCurrentHand = this._tables
-            .get(tableId)
-            .players.indexOf(auxArray[0]);
-        /*console.log("MOVE SAMPLE-->", moveSample);
-        if (moveSample) {
-            if (
-                indexCurrentShuffler + 1 ==
-                this._tables.get(tableId).players.length
-            ) {
-                this._tables.get(tableId).shuffledUser = this._tables.get(
-                    tableId
-                ).players[0];
-                this._tables.get(tableId).shiftUser = this._tables.get(
-                    tableId
-                ).players[0];
-            }
-            this._tables.get(tableId).shuffledUser = this._tables.get(
-                tableId
-            ).players[indexCurrentShuffler + 1];
-            this._tables.get(tableId).shiftUser = this._tables.get(
-                tableId
-            ).players[indexCurrentShuffler + 1];
-        } else {*/
-        console.log("indexCurrentHand-->", indexCurrentHand);
-        if (winnerPlayerIndex != null) {
-            this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[winnerPlayerIndex];
-        }
-        else {
-            if (indexCurrentHand + 1 ==
-                this._tables.get(tableId).players.length) {
-                this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[0];
-            }
-            else {
-                this._tables.get(tableId).shiftUser = this._tables.get(tableId).players[indexCurrentHand + 1];
-            }
-        }
     };
     /**
      * @param data
@@ -117,19 +128,25 @@ var GameControllerImpl = /** @class */ (function () {
      */
     GameControllerImpl.prototype.takeGameDecision = function (data, tableId, user) {
         return __awaiter(this, void 0, void 0, function () {
-            var searchTable, _createdTables, currentHand, auxArray, indexCurrentHand, numberOfPlayers, winnerPlayerIndex;
+            var searchTable, _createdTables, currentHand, auxArray, indexCurrentHand, numberOfPlayers, winnerPlayerIndex, moveSample, index, shiftUser, shuffledUser, _handResult, shiftUser, shuffledUser, _handResult;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(this._tables.get(tableId) === undefined)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this._tableController.getTables()];
+                        if (!(this._tables.get(tableId) == null ||
+                            this._tables.get(tableId) === undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this._tablesController.getTables()];
                     case 1:
                         _createdTables = _a.sent();
                         _createdTables.filter(function (table) {
                             return table.id === tableId;
                         });
-                        _createdTables[0].sampleCardInTable = new Card_1.default(Card_1.Suit.Oro, 2);
-                        this._tables.set(tableId, _createdTables[0]);
+                        if (_createdTables.length == 0) {
+                            throw new Error("La mesa enviada por el cliente no existe");
+                        }
+                        else {
+                            this._tables.set(tableId, _createdTables[0]);
+                        }
                         _a.label = 2;
                     case 2:
                         currentHand = this._tables.get(tableId).shiftUser;
@@ -140,9 +157,6 @@ var GameControllerImpl = /** @class */ (function () {
                         indexCurrentHand = this._tables
                             .get(tableId)
                             .players.indexOf(auxArray[0]);
-                        if (this._tables.get(tableId).cardsInTable === undefined) {
-                            this._tables.get(tableId).cardsInTable = new Array();
-                        }
                         this._tables
                             .get(tableId)
                             .cardsInTable.splice(indexCurrentHand, 0, data);
@@ -150,20 +164,36 @@ var GameControllerImpl = /** @class */ (function () {
                         numberOfPlayers = searchTable.playersQty;
                         if (searchTable.cardsInTable !== undefined &&
                             searchTable.cardsInTable.length == numberOfPlayers) {
-                            winnerPlayerIndex = this.compareCardsInTable(tableId.toString(), searchTable.cardsInTable, searchTable.sampleCardInTable);
-                            if (winnerPlayerIndex < searchTable.playersQty / 2) {
-                                this._tables.get(tableId).scorerTeam1++;
+                            winnerPlayerIndex = this.compareCardsInGame(searchTable.cardsInTable, searchTable.sampleCardInTable);
+                            moveSample = void 0;
+                            searchTable.players[0].cards.length == 0
+                                ? (moveSample = true)
+                                : (moveSample = false);
+                            this.addScore(tableId, winnerPlayerIndex);
+                            this.changeShift(tableId, winnerPlayerIndex, moveSample);
+                            for (index = 0; index < this._tables.get(tableId).players.length; index++) {
+                                this._tables.get(tableId).players[index].cards = this._tables
+                                    .get(tableId)
+                                    .players[index].cards.filter(function (card) {
+                                    for (var j = 0; j < _this._tables.get(tableId).cardsInTable.length; j++) {
+                                        if (card !=
+                                            _this._tables.get(tableId).cardsInTable[j])
+                                            return card;
+                                    }
+                                });
                             }
-                            else {
-                                this._tables.get(tableId).scorerTeam2++;
-                            }
-                            this.changeShift(tableId, winnerPlayerIndex);
                             this._tables.get(tableId).cardsInTable = [];
-                            return [2 /*return*/, true];
+                            shiftUser = searchTable.shiftUser;
+                            shuffledUser = searchTable.shuffledUser;
+                            _handResult = new HandResult_1.default(shiftUser, shuffledUser, true);
+                            return [2 /*return*/, _handResult];
                         }
                         else {
-                            this.changeShift(tableId, null);
-                            return [2 /*return*/, false];
+                            this.changeShift(tableId, null, null);
+                            shiftUser = searchTable.shiftUser;
+                            shuffledUser = searchTable.shuffledUser;
+                            _handResult = new HandResult_1.default(shiftUser, shuffledUser, false);
+                            return [2 /*return*/, _handResult];
                         }
                         return [2 /*return*/];
                 }
@@ -219,9 +249,24 @@ var GameControllerImpl = /** @class */ (function () {
         this._tablesConnections.dealCards(table, { hands: hands, sampleCard: sampleCard });
         table.state = Table_1.TableSate.AWAITING_CARD;
     };
+    GameControllerImpl.prototype.addScore = function (tableId, winnerPlayerIndex) {
+        if (winnerPlayerIndex < this._tables.get(tableId).playersQty / 2) {
+            this._tables.get(tableId).scorerTeam1++;
+        }
+        else {
+            this._tables.get(tableId).scorerTeam2++;
+        }
+    };
     Object.defineProperty(GameControllerImpl.prototype, "tablesConnection", {
         set: function (tablesConnection) {
             this._tablesConnections = tablesConnection;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameControllerImpl.prototype, "tablesController", {
+        set: function (tablesController) {
+            this._tablesController = tablesController;
         },
         enumerable: true,
         configurable: true

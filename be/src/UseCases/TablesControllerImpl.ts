@@ -34,11 +34,10 @@ export default class TablesControllerImpl implements TablesController {
 		table.addPlayer(user);
 		const tableWithDBId = await this.tablesDB.addTable(table);
 		this._tablesSessionController.createTable(tableWithDBId.id);
-		this.gameController.tables.set(tableWithDBId.id, table);
 		return tableWithDBId;
 	}
 
-	public getTables(): Promise<Table[]> {
+	public async getTables(): Promise<Table[]> {
 		return this.tablesDB.getTables();
 	}
 

@@ -97,14 +97,16 @@ export default class SocketHandler implements TablesSessions, EventEmitter {
 							"Suit parameter is missing."
 						);
 				}
-				this.io.sockets.to(id).emit("cartaJugada", card);
-				let deleteCardsOnTable = this.gameController.takeGameDecision(
+				this.io.sockets.to(id).emit("cardPlayed", card);
+				let gameDecisionResponse = await this.gameController.takeGameDecision(
 					card,
 					id,
 					new User(parsedData.nickname, parsedData.email)
 				);
-				if (deleteCardsOnTable) {
+				if (gameDecisionResponse.needShuffle) {
 					this.io.sockets.emit("deleteCards", null);
+
+					// ver de llamar al repartir y manejo del usuario mano devuelto por el servicio
 				}
 			});
 		});

@@ -64,14 +64,17 @@ var TablesControllerImpl = /** @class */ (function () {
                     case 1:
                         tableWithDBId = _a.sent();
                         this._tablesSessionController.createTable(tableWithDBId.id);
-                        this.gameController.tables.set(tableWithDBId.id, table);
                         return [2 /*return*/, tableWithDBId];
                 }
             });
         });
     };
     TablesControllerImpl.prototype.getTables = function () {
-        return this.tablesDB.getTables();
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.tablesDB.getTables()];
+            });
+        });
     };
     TablesControllerImpl.prototype.joinTable = function (idTable, user, password) {
         return __awaiter(this, void 0, void 0, function () {

@@ -32,6 +32,7 @@ export default class Server {
 			this.tablesDB,
 			this.gameController
 		);
+		this.gameController.tablesController = this.tablesController;
 		this.webServer = new ExpressWebServer({
 			tablesController: this.tablesController,
 			gameController: this.gameController,

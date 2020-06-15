@@ -6,10 +6,13 @@ import User from "../Entities/User";
 import { getRandomSubarray } from "../Utils/Arrays";
 import EventEmitter from "../Infra/Web/EventEmitter";
 import { TableSate } from "../Entities/Table";
+import Player from "../Entities/Player";
+import HandResult from "../Entities/HandResult";
 
 export default class GameControllerImpl implements GameController {
 	private _tables: Map<String, Table>;
 	private _tablesConnections: EventEmitter;
+	private _tablesController: TablesController;
 
 	constructor() {
 		this._tables = new Map<String, Table>();
@@ -21,8 +24,7 @@ export default class GameControllerImpl implements GameController {
 	 *          1 si gana una carta del equipo 1
 	 *          0 si gana una carta del equipo 2
 	 */
-	private compareCardsInTable(
-		tableId: string,
+	private compareCardsInGame(
 		cardsInGame: Card[],
 		sampleCardInGame: Card
 	): number {
@@ -38,16 +40,33 @@ export default class GameControllerImpl implements GameController {
 		return winnerPlayerIndex;
 	}
 
-	private changeShift(tableId: String, winnerPlayerIndex: number) {
+	private async changeShift(
+		tableId: String,
+		winnerPlayerIndex: number,
+		moveSample: boolean
+	) {
 		let currentHand = this._tables.get(tableId).shiftUser;
+		let currentShuffler = this._tables.get(tableId).shiftUser;
 
-		let auxArray = this._tables.get(tableId).players.filter(player => {
-			if (player.nickname === currentHand.nickname) return player;
-		});
+		let auxArrayCurrentHand = this._tables
+			.get(tableId)
+			.players.filter(player => {
+				if (player.nickname === currentHand.nickname) return player;
+			});
+
+		let auxArrayCurrentShuffler = this._tables
+			.get(tableId)
+			.players.filter(player => {
+				if (player.nickname === currentShuffler.nickname) return player;
+			});
+
 		let indexCurrentHand = this._tables
 			.get(tableId)
-			.players.indexOf(auxArray[0]);
-		/*console.log("MOVE SAMPLE-->", moveSample);
+			.players.indexOf(auxArrayCurrentHand[0]);
+
+		let indexCurrentShuffler = this._tables
+			.get(tableId)
+			.players.indexOf(auxArrayCurrentShuffler[0]);
 		if (moveSample) {
 			if (
 				indexCurrentShuffler + 1 ==
@@ -59,35 +78,35 @@ export default class GameControllerImpl implements GameController {
 				this._tables.get(tableId).shiftUser = this._tables.get(
 					tableId
 				).players[0];
-			}
-			this._tables.get(tableId).shuffledUser = this._tables.get(
-				tableId
-			).players[indexCurrentShuffler + 1];
-			this._tables.get(tableId).shiftUser = this._tables.get(
-				tableId
-			).players[indexCurrentShuffler + 1];
-		} else {*/
-		console.log("indexCurrentHand-->", indexCurrentHand);
-		if (winnerPlayerIndex != null) {
-			this._tables.get(tableId).shiftUser = this._tables.get(
-				tableId
-			).players[winnerPlayerIndex];
-		} else {
-			if (
-				indexCurrentHand + 1 ==
-				this._tables.get(tableId).players.length
-			) {
-				this._tables.get(tableId).shiftUser = this._tables.get(
-					tableId
-				).players[0];
 			} else {
+				this._tables.get(tableId).shuffledUser = this._tables.get(
+					tableId
+				).players[indexCurrentShuffler + 1];
 				this._tables.get(tableId).shiftUser = this._tables.get(
 					tableId
-				).players[indexCurrentHand + 1];
+				).players[indexCurrentShuffler + 1];
+			}
+		} else {
+			if (winnerPlayerIndex != null) {
+				this._tables.get(tableId).shiftUser = this._tables.get(
+					tableId
+				).players[winnerPlayerIndex];
+			} else {
+				if (
+					indexCurrentHand + 1 ==
+					this._tables.get(tableId).players.length
+				) {
+					this._tables.get(tableId).shiftUser = this._tables.get(
+						tableId
+					).players[0];
+				} else {
+					this._tables.get(tableId).shiftUser = this._tables.get(
+						tableId
+					).players[indexCurrentHand + 1];
+				}
 			}
 		}
 	}
-
 	/**
 	 * @param data
 	 * @param tableId
@@ -98,38 +117,23 @@ export default class GameControllerImpl implements GameController {
 		data: Card,
 		tableId: String,
 		user: User
-	): Promise<boolean> {
+	): Promise<HandResult> {
 		let searchTable: Table;
-		/*
-		if (this._tables.get(tableId) === undefined) {
-			let _createdTables: Table[] = await this._tableController.getTables();
+
+		if (
+			this._tables.get(tableId) == null ||
+			this._tables.get(tableId) === undefined
+		) {
+			let _createdTables: Table[] = await this._tablesController.getTables();
 			_createdTables.filter(table => {
 				return table.id === tableId;
 			});
-			_createdTables[0].sampleCardInTable = new Card(Suit.Oro, 2);
-			this._tables.set(tableId, _createdTables[0]);
+			if (_createdTables.length == 0) {
+				throw new Error("La mesa enviada por el cliente no existe");
+			} else {
+				this._tables.set(tableId, _createdTables[0]);
+			}
 		}
-
-		//Se juegan todas las cartas necesarias para definir ganador de mano
-
-		//TO DELETE: Se asigna shift user y shuffled user a efectos prácticos
-		if (
-			this._tables.get(tableId).shiftUser === undefined ||
-			this._tables.get(tableId).shuffledUser === undefined
-		) {
-			this._tables.get(tableId).shiftUser = this._tables
-				.get(tableId)
-				.players.filter(player => {
-					return player.nickname === user.nickname;
-				})[0];
-
-			this._tables.get(tableId).shuffledUser = this._tables
-				.get(tableId)
-				.players.filter(player => {
-					return player.nickname === user.nickname;
-				})[0];
-		}
-*/
 		let currentHand = this._tables.get(tableId).shiftUser;
 
 		let auxArray = this._tables.get(tableId).players.filter(player => {
@@ -139,15 +143,12 @@ export default class GameControllerImpl implements GameController {
 			.get(tableId)
 			.players.indexOf(auxArray[0]);
 
-		if (this._tables.get(tableId).cardsInTable === undefined) {
-			this._tables.get(tableId).cardsInTable = new Array<Card>();
-		}
-
 		this._tables
 			.get(tableId)
 			.cardsInTable.splice(indexCurrentHand, 0, data);
 
 		searchTable = this._tables.get(tableId);
+
 		//TODO: Validación de datos en mesa
 
 		let numberOfPlayers = searchTable.playersQty;
@@ -156,23 +157,53 @@ export default class GameControllerImpl implements GameController {
 			searchTable.cardsInTable !== undefined &&
 			searchTable.cardsInTable.length == numberOfPlayers
 		) {
-			let winnerPlayerIndex = this.compareCardsInTable(
-				tableId.toString(),
+			let winnerPlayerIndex = this.compareCardsInGame(
 				searchTable.cardsInTable,
 				searchTable.sampleCardInTable
 			);
-			if (winnerPlayerIndex < searchTable.playersQty / 2) {
-				this._tables.get(tableId).scorerTeam1++;
-			} else {
-				this._tables.get(tableId).scorerTeam2++;
+			//Validación de que sea última mano y tengamos que repartir
+			let moveSample: boolean;
+			searchTable.players[0].cards.length == 0
+				? (moveSample = true)
+				: (moveSample = false);
+
+			this.addScore(tableId, winnerPlayerIndex);
+			this.changeShift(tableId, winnerPlayerIndex, moveSample);
+			for (
+				let index = 0;
+				index < this._tables.get(tableId).players.length;
+				index++
+			) {
+				this._tables.get(tableId).players[
+					index
+				].cards = this._tables
+					.get(tableId)
+					.players[index].cards.filter(card => {
+						for (
+							let j = 0;
+							j < this._tables.get(tableId).cardsInTable.length;
+							j++
+						) {
+							if (
+								card !=
+								this._tables.get(tableId).cardsInTable[j]
+							)
+								return card;
+						}
+					});
 			}
-			this.changeShift(tableId, winnerPlayerIndex);
 
 			this._tables.get(tableId).cardsInTable = [];
-			return true;
+			let shiftUser = searchTable.shiftUser;
+			let shuffledUser = searchTable.shuffledUser;
+			let _handResult = new HandResult(shiftUser, shuffledUser, true);
+			return _handResult;
 		} else {
-			this.changeShift(tableId, null);
-			return false;
+			this.changeShift(tableId, null, null);
+			let shiftUser = searchTable.shiftUser;
+			let shuffledUser = searchTable.shuffledUser;
+			let _handResult = new HandResult(shiftUser, shuffledUser, false);
+			return _handResult;
 		}
 	}
 	/**
@@ -232,7 +263,19 @@ export default class GameControllerImpl implements GameController {
 		table.state = TableSate.AWAITING_CARD;
 	}
 
+	private addScore(tableId: String, winnerPlayerIndex: number) {
+		if (winnerPlayerIndex < this._tables.get(tableId).playersQty / 2) {
+			this._tables.get(tableId).scorerTeam1++;
+		} else {
+			this._tables.get(tableId).scorerTeam2++;
+		}
+	}
+
 	public set tablesConnection(tablesConnection: EventEmitter) {
 		this._tablesConnections = tablesConnection;
+	}
+
+	public set tablesController(tablesController: TablesController) {
+		this._tablesController = tablesController;
 	}
 }
